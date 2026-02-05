@@ -1,0 +1,47 @@
+# Dependency directory
+node_modules/
+
+# Build / compiled files
+dist/
+
+# Logs
+*.log
+logs/
+npm-debug.log*
+
+# Environment variables
+.env
+.env.*
+
+# Uploads or temp files
+uploads/
+
+# Editor & system files
+.vscode/
+.DS_Store
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Virtual environment
+venv/
+
+# Logs
+*.log
+
+# Editor & system files
+.vscode/
+.DS_Store
+.idea/
+
+# sound demo
+# Inside public/audio_samples/
+*.mp3

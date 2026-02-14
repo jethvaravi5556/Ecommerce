@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import ROLE from '../common/role';
 import SummaryApi from '../common';
-import { toast } from 'react-toastify'; //  Import toast for notifications
-import { useDispatch } from 'react-redux'; //  Import Redux dispatch
-import { useNavigate } from 'react-router-dom'; //  Import navigate for redirection
+import { toast } from 'react-toastify'; // ✅ Import toast for notifications
+import { useDispatch } from 'react-redux'; // ✅ Import Redux dispatch
+import { useNavigate } from 'react-router-dom'; // ✅ Import navigate for redirection
 
 const ChangeUserRole = ({ user, onClose,callFunc }) => {
   const [selectedRole, setSelectedRole] = useState(user?.role || '');
@@ -20,12 +20,12 @@ const ChangeUserRole = ({ user, onClose,callFunc }) => {
       apiUrl = apiUrl.replace(/\u200B/g, ""); // Remove hidden ZWSP characters
 
       const response = await fetch(apiUrl, {
-        method: SummaryApi.updateUser.method, //  Fixed key name (updateuser → updateUser)
+        method: SummaryApi.updateUser.method, // ✅ Fixed key name (updateuser → updateUser)
         headers: {
           "Content-Type": "application/json",
         },
-        credentials: "include", //  To include cookies (JWT token)
-        body: JSON.stringify({ userId: user._id, role: selectedRole }), //  Send correct data format
+        credentials: "include", // ✅ To include cookies (JWT token)
+        body: JSON.stringify({ userId: user._id, role: selectedRole }), // ✅ Send correct data format
       });
 
       const data = await response.json();
@@ -33,7 +33,7 @@ const ChangeUserRole = ({ user, onClose,callFunc }) => {
 
       if (data.success) {
         toast.success(data.message);
-        //dispatch(setUserDetails(null)); //  Clear user from Redux
+        //dispatch(setUserDetails(null)); // ✅ Clear user from Redux
         onClose()
         callFunc()
       } else {
@@ -75,7 +75,7 @@ const ChangeUserRole = ({ user, onClose,callFunc }) => {
             Cancel
           </button>
           <button 
-            type="button"  //  Changed from submit to button
+            type="button"  // ✅ Changed from submit to button
             className='px-4 py-2 bg-red-600 text-white rounded-md'
             onClick={updateUserRole}
           >

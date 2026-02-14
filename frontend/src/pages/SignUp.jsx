@@ -21,6 +21,11 @@ const SignUp = () => {
 
   const navigate = useNavigate();
 
+  const validateEmail = (email) => {
+    const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.com$/;
+    return emailPattern.test(email);
+  };
+
   const validatePassword = (password) => {
     const minLength = /.{8,}/;
     const upperCase = /[A-Z]/;
@@ -46,6 +51,7 @@ const SignUp = () => {
 
   const handleOnChange = (e) => {
     const { name, value } = e.target;
+
     setData((prev) => ({
       ...prev,
       [name]: value,
@@ -77,6 +83,11 @@ const SignUp = () => {
       return;
     }
 
+    if (!validateEmail(email)) {
+      toast.error("Please enter a valid email address");
+      return;
+    }
+
     if (password !== confirmpassword) {
       toast.error("Passwords do not match");
       return;
@@ -105,6 +116,7 @@ const SignUp = () => {
       if (dataApi.success) {
         toast.success(dataApi.message);
         navigate("/login");
+
         setData({
           name: "",
           email: "",
@@ -112,6 +124,7 @@ const SignUp = () => {
           confirmpassword: "",
           profilePic: "",
         });
+
         setPasswordStrength("");
       } else {
         toast.error(dataApi.message || "Something went wrong");
@@ -143,6 +156,7 @@ const SignUp = () => {
               </label>
             </form>
           </div>
+
           <form className="pt-6 flex flex-col gap-2" onSubmit={handleSubmit}>
             <div className="grid">
               <label>Name:</label>
@@ -158,6 +172,7 @@ const SignUp = () => {
                 />
               </div>
             </div>
+
             <div className="grid">
               <label>Email:</label>
               <div className="bg-slate-100 p-2">
@@ -167,11 +182,13 @@ const SignUp = () => {
                   value={data.email}
                   onChange={handleOnChange}
                   placeholder="Enter Email"
+                  pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[A-Za-z]{2,}$"
                   className="w-full h-full outline-none bg-transparent"
                   required
                 />
               </div>
             </div>
+
             <div>
               <label>Password:</label>
               <div className="bg-slate-100 p-2 flex">
@@ -191,6 +208,7 @@ const SignUp = () => {
                   {showPassword ? <FaEye /> : <FaEyeSlash />}
                 </div>
               </div>
+
               {passwordStrength && (
                 <p
                   className={`text-sm mt-1 ${
@@ -205,6 +223,7 @@ const SignUp = () => {
                 </p>
               )}
             </div>
+
             <div>
               <label>Confirm Password:</label>
               <div className="bg-slate-100 p-2 flex">
@@ -225,14 +244,16 @@ const SignUp = () => {
                 </div>
               </div>
             </div>
+
             <button className="bg-red-600 hover:bg-red-700 text-white rounded-full px-6 py-2 w-full max-w-[150px] mx-auto my-6 block hover:scale-110 transition-all">
               Sign Up
             </button>
           </form>
+
           <p>
             Already have an account?{" "}
             <Link
-              to={"/Login"}
+              to={"/login"}
               className="text-red-500 hover:text-red-700 hover:underline"
             >
               Login

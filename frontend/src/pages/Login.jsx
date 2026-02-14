@@ -2,17 +2,17 @@ import React, { useContext, useState } from "react";
 import loginIcons from "../assest/signin.gif";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
-import { toast } from "react-toastify"; // ✅ Import toast notification
+import { toast } from "react-toastify"; 
 import SummaryApi from "../common";
 import Context from "../context";
 import { GoogleLogin } from "@react-oauth/google";
-import { useDispatch } from "react-redux"; // ✅ Import this
+import { useDispatch } from "react-redux";
 import { jwtDecode } from "jwt-decode";
 import { setUserDetails } from "../store/userSlice";
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
-  const dispatch = useDispatch(); // ✅ Add this inside Login component
+  const dispatch = useDispatch(); 
   const navigate = useNavigate();
   // const generalContext= useContext(Context)
   const { fetchUserDetails, fetchUserAddToCart } = useContext(Context);
@@ -41,10 +41,10 @@ const Login = () => {
 
     try {
       let apiUrl = SummaryApi.signIn.url.trim();
-      apiUrl = apiUrl.replace(/\u200B/g, ""); // Remove hidden characters
+      apiUrl = apiUrl.replace(/\u200B/g, ""); 
 
       const response = await fetch(apiUrl, {
-        method: SummaryApi.signIn.method, // ✅ Fixed typo: signIp → signIn
+        method: SummaryApi.signIn.method, 
         headers: {
           "Content-Type": "application/json",
         },
@@ -167,6 +167,7 @@ const Login = () => {
                   if (dataApi.success) {
                     toast.success(dataApi.message);
                     localStorage.setItem("token", dataApi.token); // optional
+                    dispatch(setUserDetails(dataApi.user));
                     await fetchUserDetails();
                     await fetchUserAddToCart();
                     navigate("/");

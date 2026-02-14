@@ -7,12 +7,13 @@ import { toast } from "react-toastify";
 
 const AllUsers = () => {
   const [allUsers, setAllUsers] = useState([]);
+  const [filterRole, setFilterRole] = useState("");
   const [openUpdateRole, setOpenUpdateRole] = useState(false);
   const [updateUserDetails, setUpdateUserDetails] = useState(null);
 
   const fetchAllUsers = async () => {
     let apiUrl = SummaryApi.AllUsers.url.trim();
-    apiUrl = apiUrl.replace(/\u200B/g, ""); // Remove hidden characters
+    apiUrl = apiUrl.replace(/\u200B/g, "");
 
     const fetchData = await fetch(apiUrl, {
       method: SummaryApi.AllUsers.method,
@@ -32,8 +33,26 @@ const AllUsers = () => {
     fetchAllUsers();
   }, []);
 
+  // ✅ Filter logic
+  const filteredUsers = allUsers.filter((user) =>
+    filterRole ? user.role === filterRole : true,
+  );
+
   return (
-    <div className="bg-white pb-4">
+    <div className="bg-white pb-4 p-4">
+      {/* 🔹 Filter Dropdown */}
+      <div className="mb-4">
+        <select
+          className="border p-2 rounded"
+          value={filterRole}
+          onChange={(e) => setFilterRole(e.target.value)}
+        >
+          <option value="">All Users</option>
+          <option value="ADMIN">Admin</option>
+          <option value="GENERAL">General</option>
+        </select>
+      </div>
+
       <table className="w-full userTable">
         <thead>
           <tr className="bg-black text-white">
@@ -46,7 +65,7 @@ const AllUsers = () => {
           </tr>
         </thead>
         <tbody>
-          {allUsers.map((user, index) => (
+          {filteredUsers.map((user, index) => (
             <tr key={user._id} className="text-center">
               <td>{index + 1}</td>
               <td>{user.name}</td>
@@ -57,7 +76,7 @@ const AllUsers = () => {
                 <button
                   className="bg-green-100 p-2 cursor-pointer rounded-full hover:bg-green-500 hover:text-white"
                   onClick={() => {
-                    setUpdateUserDetails(user); // ✅ Pass selected user details
+                    setUpdateUserDetails(user);
                     setOpenUpdateRole(true);
                   }}
                 >
@@ -68,8 +87,22 @@ const AllUsers = () => {
           ))}
         </tbody>
       </table>
+
+      {openUpdateRole && updateUserDetails && (
+        <ChangeUserRole
+          user={updateUserDetails}
+          onClose={() => setOpenUpdateRole(false)}
+          callFunc={fetchAllUsers}
+        />
+      )}
+      {/* show if no users */}
+      {!filteredUsers.length && (
+        <p className="text-center mt-4">No Users Found</p>
+      )}
     </div>
   );
 };
 
 export default AllUsers;
+
+

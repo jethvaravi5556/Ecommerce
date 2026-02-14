@@ -1,0 +1,26 @@
+# Dependency directory
+node_modules
+
+# Build output
+build/
+
+# Environment variables
+.env
+.env.*
+
+# Logs
+*.log
+npm-debug.log*
+
+# Editor & system files
+.vscode/
+.DS_Store
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# OS-specific
+Thumbs.db

@@ -5,7 +5,6 @@ async function deleteUserController(req, res) {
   try {
     console.log("Session User ID:", req.userId);
 
-    //Check authentication
     if (!req.userId) {
       return res.status(401).json({
         message: "Unauthorized: User ID missing",
@@ -16,7 +15,6 @@ async function deleteUserController(req, res) {
 
     const userId = req.params.id;
 
-    // Validate userId
     if (!userId) {
       return res.status(400).json({
         message: "User ID is required",
@@ -33,7 +31,6 @@ async function deleteUserController(req, res) {
       });
     }
 
-    // Check admin role
     const sessionUser = await userModel.findById(req.userId).select("role");
 
     if (!sessionUser || sessionUser.role !== "ADMIN") {
@@ -44,7 +41,6 @@ async function deleteUserController(req, res) {
       });
     }
 
-    // Prevent admin deleting himself
     if (req.userId.toString() === userId) {
       return res.status(400).json({
         message: "Admin cannot delete own account",
@@ -53,7 +49,6 @@ async function deleteUserController(req, res) {
       });
     }
 
-    //  Delete user
     const deletedUser = await userModel.findByIdAndDelete(userId);
 
     if (!deletedUser) {

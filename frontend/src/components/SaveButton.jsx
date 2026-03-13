@@ -47,8 +47,15 @@ const SaveButton = ({ productId, className = "" }) => {
   };
 
   return (
-    <button onClick={handleToggleSave} className={`absolute top-2 right-2 text-xl ${className}`}>
-      {isSaved ? <AiFillHeart className="text-red-500" /> : <AiOutlineHeart className="text-gray-500" />}
+    <button
+      onClick={handleToggleSave}
+      className={`absolute top-2 right-2 text-xl ${className}`}
+    >
+      {isSaved ? (
+        <AiFillHeart className="text-red-500" />
+      ) : (
+        <AiOutlineHeart className="text-gray-500" />
+      )}
     </button>
   );
 };

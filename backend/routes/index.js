@@ -32,6 +32,11 @@ router.post("/user-logout", userLogoutController);
 router.get("/user-profile", authToken, userProfileController);
 router.put("/update-profile", authToken, updateProfileController);
 
+//wishlist
+router.post("/save-item", authToken, saveItem);
+router.post("/unsave-item", authToken, unsaveItem);
+router.get("/saved-items/:userId", authToken, getsavedItems);
+
 // Admin Panel
 router.get("/all-users", authToken, allUserController);
 router.post("/update-users", authToken, updateUserController);
@@ -52,6 +57,11 @@ router.post("/filterproduct", filterProductController);
 import sendOtpController from "../controller/user/forgotPassword.js";
 import verifyOtpController from "../controller/user/varifyOtp.js";
 import resetPasswordController from "../controller/user/resetPassword.js";
+import {
+  getsavedItems,
+  saveItem,
+  unsaveItem,
+} from "../controller/user/saveItem.js";
 
 // // otp
 router.post("/send-otp", sendOtpController);

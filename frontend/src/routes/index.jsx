@@ -11,6 +11,10 @@ import Cancel from "../pages/Cancel";
 import VerifyOtp from "../pages/VarifyOtp";
 import ResetPassword from "../pages/ResetPassword";
 import Home from "../pages/Home";
+import SavedItems from "../pages/SavedItems";
+import SearchProduct from "../pages/SearchProduct";
+import AllProducts from "../pages/AllProducts";
+import Profile from "../pages/Profile";
 
 const router = createBrowserRouter([
   {
@@ -33,7 +37,18 @@ const router = createBrowserRouter([
         path: "sign-up",
         element: <SignUp />,
       },
-
+      {
+        path: "/profile",
+        element: <Profile />,
+      },
+      {
+        path: "search",
+        element: <SearchProduct />,
+      },
+      {
+        path: "/saved-items",
+        element: <SavedItems />,
+      },
       {
         path: "success",
         element: <Success />,
@@ -63,6 +78,10 @@ const router = createBrowserRouter([
           {
             path: "all-users",
             element: <AllUsers />,
+          },
+          {
+            path: "all-products",
+            element: <AllProducts />,
           },
         ],
       },

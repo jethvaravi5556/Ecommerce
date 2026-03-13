@@ -26,7 +26,11 @@ const HorizontalCardProduct = ({ category, heading }) => {
     setLoading(true);
     const categoryProduct = await fetchCategoryWiseProduct(category);
     setLoading(false);
+<<<<<<< HEAD
     setData(categoryProduct?.data || []);
+=======
+    setData(categoryProduct?.data || []); // ✅ fallback to []
+>>>>>>> 8b7df25621484fca19baaff132fe414fc73ebd4f
   };
 
   useEffect(() => {

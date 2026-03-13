@@ -48,7 +48,7 @@ const SearchProduct = () => {
 
   return (
     <div className="container mx-auto p-4">
-      {loading && <p className="text-lg text-center">loading...</p>}
+      {loading && <p className="text-lg text-center">Loading...</p>}
 
       {!loading && <p>Search Result: {data.length}</p>}
 

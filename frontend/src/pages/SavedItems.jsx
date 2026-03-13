@@ -1,11 +1,10 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useContext } from "react";
 import { useSelector } from "react-redux";
 import { MdDelete } from "react-icons/md";
 import { Link } from "react-router-dom";
 import displayINRCurrency from "../helpers/displayCurrency";
 import unsaveItem from "../helpers/unsaveItem";
 import addToCart from "../helpers/addToCart";
-import SummaryApi from "../common";
 import Context from "../context";
 import scrollTop from "../helpers/scrollTop";
 
@@ -13,14 +12,12 @@ const SavedItems = () => {
   const user = useSelector((state) => state.user.user);
   const context = useContext(Context);
 
-  // Use savedItems from context instead of local state
   const savedItems = context.savedItems || [];
 
   const handleUnsave = async (productId) => {
     try {
       await unsaveItem(productId, user._id);
 
-      // Update context data immediately
       const updatedItems = savedItems.filter((item) => item._id !== productId);
       context.setSavedItems(updatedItems);
 
@@ -35,9 +32,6 @@ const SavedItems = () => {
     context.fetchUserAddToCart();
   };
 
-  // Remove the useEffect that was fetching data locally
-  // Data is now managed by context
-
   if (!user?._id) return <div>Please login to see your saved items.</div>;
 
   return (
@@ -50,9 +44,8 @@ const SavedItems = () => {
             key={product._id}
             className="w-full bg-white rounded-sm shadow-md"
           >
-            {/* IMAGE SECTION */}
+            {/* IMAGE */}
             <div className="relative bg-slate-200 h-48 p-4 flex justify-center items-center">
-              {/* REMOVE ICON */}
               <button
                 onClick={() => handleUnsave(product._id)}
                 className="absolute top-2 right-2 text-red-500 text-xl hover:text-red-700 z-10"
@@ -68,18 +61,21 @@ const SavedItems = () => {
                 <img
                   src={product?.productImage[0]}
                   className="h-full object-scale-down hover:scale-110 transition-all mix-blend-multiply"
+                  alt={product?.productName}
                 />
               </Link>
             </div>
 
-            {/* PRODUCT DETAILS */}
+            {/* DETAILS */}
             <div className="p-4 grid gap-3">
               <Link to={"/product/" + product?._id} onClick={scrollTop}>
                 <h2 className="font-medium text-base md:text-lg line-clamp-1 text-black">
                   {product?.productName}
                 </h2>
 
-                <p className="capitalize text-slate-500">{product?.category}</p>
+                <p className="capitalize text-slate-500">
+                  {product?.category}
+                </p>
 
                 <div className="flex gap-2">
                   <p className="text-red-500 font-medium">
@@ -92,7 +88,6 @@ const SavedItems = () => {
                 </div>
               </Link>
 
-              {/* ADD TO CART */}
               <button
                 className="text-sm bg-red-500 hover:bg-red-700 text-white px-3 py-1 rounded-full"
                 onClick={(e) => handleAddToCart(e, product?._id)}

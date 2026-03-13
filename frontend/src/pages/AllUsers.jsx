@@ -32,7 +32,7 @@ const AllUsers = () => {
 
   const handleDeleteUser = async (id) => {
     const confirmDelete = window.confirm(
-      "Are you sure you want to delete this user?",
+      "Are you sure you want to delete this user?"
     );
 
     if (!confirmDelete) return;
@@ -53,7 +53,7 @@ const AllUsers = () => {
   };
 
   const filteredUsers = allUsers.filter((user) =>
-    filterRole ? user.role === filterRole : true,
+    filterRole ? user.role === filterRole : true
   );
 
   return (
@@ -75,7 +75,7 @@ const AllUsers = () => {
 
       {/* Table */}
       <div className="bg-white p-4 mt-4 rounded w-full overflow-x-auto">
-        <table className="w-full text-sm whitespace-nowrap">
+        <table className="min-w-[700px] w-full text-sm whitespace-nowrap">
           <thead>
             <tr className="bg-black text-white">
               <th>Sr.</th>
@@ -94,7 +94,9 @@ const AllUsers = () => {
                 <td className="p-2">{user.name}</td>
                 <td className="p-2">{user.email}</td>
                 <td className="p-2">{user.role}</td>
-                <td className="p-2">{moment(user.createdAt).format("LL")}</td>
+                <td className="p-2">
+                  {moment(user.createdAt).format("LL")}
+                </td>
 
                 <td className="p-2">
                   <div className="flex justify-center gap-2">

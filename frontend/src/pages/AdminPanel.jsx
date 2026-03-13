@@ -21,10 +21,8 @@ const AdminPanel = () => {
     <div className="flex min-h-screen bg-gray-100">
       {/* SIDEBAR */}
       <aside
-        className={`fixed md:sticky top-16 left-0 h-[calc(100vh-64px)] md:h-[calc(100vh-64px)] w-64 bg-white border-r z-40
-  transform transition-transform duration-300 overflow-y-auto
-  ${menuOpen ? "translate-x-0" : "-translate-x-full"}
-  md:translate-x-0 md:w-64`}
+        className={`bg-white md:min-h-full w-full md:max-w-60 customShadow transition-all duration-300 z-40
+        ${menuOpen ? "block fixed top-0 left-0 h-full" : "hidden md:block"}`}
       >
         {/* Profile */}
         <div className="flex flex-col items-center justify-center h-40 border-b pt-4 md:pt-6">
@@ -58,23 +56,8 @@ const AdminPanel = () => {
             }}
           >
             All Users
-          </NavLink>
-
-          <NavLink
-            to="/admin-panel/all-products"
-            className={({ isActive }) =>
-              `p-3 rounded-lg transition ${
-                isActive
-                  ? "bg-blue-100 text-blue-600 font-semibold"
-                  : "hover:bg-gray-100"
-              }`
-            }
-            onClick={() => {
-              setMenuOpen(false);
-            }}
-          >
-            All Products
-          </NavLink>
+          </Link>
+          {/*  */}
         </nav>
       </aside>
 

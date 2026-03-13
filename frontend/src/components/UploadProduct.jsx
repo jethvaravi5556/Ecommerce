@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import productCategory from "../helpers/productCategory";
 import { FaCloudUploadAlt } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
@@ -20,6 +20,15 @@ const UploadProduct = ({ onClose, fetchData }) => {
 
   const [openFullScreenImage, setOpenFullScreenImage] = useState(false);
   const [fullScreenImage, setFullScreenImage] = useState("");
+
+  // Prevent background scrolling when modal is open
+  useEffect(() => {
+    document.body.style.overflow = "hidden";
+
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, []);
 
   const handleOnChange = (e) => {
     const { name, value } = e.target;
@@ -54,12 +63,11 @@ const UploadProduct = ({ onClose, fetchData }) => {
   const handleDeleteProductImage = async (index) => {
     const newProductImage = [...data.productImage];
     newProductImage.splice(index, 1);
-    setData((preve) => {
-      return {
-        ...preve,
-        productImage: [...newProductImage],
-      };
-    });
+
+    setData((prev) => ({
+      ...prev,
+      productImage: newProductImage,
+    }));
   };
 
   const handleSubmit = async (e) => {
@@ -111,7 +119,7 @@ const UploadProduct = ({ onClose, fetchData }) => {
         <div className="font-bold text-lg pb-3">Upload Product</div>
 
         <form
-          className="grid p-4 gap-2 h-full pb-5 overflow-y-scroll"
+          className="grid p-4 gap-2 h-full pb-5 overflow-y-auto"
           onSubmit={handleSubmit}
         >
           <label htmlFor="productName">Product Name:</label>
@@ -161,6 +169,7 @@ const UploadProduct = ({ onClose, fetchData }) => {
           <label htmlFor="productImage" className="mt-4">
             Product Image:
           </label>
+
           <label htmlFor="uploadImageInput">
             <div className="p-2 bg-slate-100 border rounded h-32 w-full flex justify-center items-center cursor-pointer">
               <div className="text-slate-500 flex justify-center items-center flex-col gap-2">
@@ -169,6 +178,7 @@ const UploadProduct = ({ onClose, fetchData }) => {
                 </span>
                 <p className="text-sm">Upload Product Image</p>
               </div>
+
               <input
                 type="file"
                 id="uploadImageInput"
@@ -179,7 +189,7 @@ const UploadProduct = ({ onClose, fetchData }) => {
           </label>
 
           {data.productImage.length > 0 && (
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 flex-wrap">
               {data.productImage.map((img, index) => (
                 <div key={index} className="relative group">
                   <img
@@ -193,6 +203,7 @@ const UploadProduct = ({ onClose, fetchData }) => {
                       setFullScreenImage(img);
                     }}
                   />
+
                   <div
                     className="absolute bottom-0 right-0 p-1 rounded-full bg-red-500 text-white hidden group-hover:block cursor-pointer"
                     onClick={() => handleDeleteProductImage(index)}
@@ -236,7 +247,7 @@ const UploadProduct = ({ onClose, fetchData }) => {
             Description:
           </label>
           <textarea
-            className="h-28 bg-slate-100 border resize-none p-1"
+            className="h-28 bg-slate-100 border resize-none p-2"
             id="description"
             placeholder="Enter Product Description"
             name="description"
@@ -245,7 +256,7 @@ const UploadProduct = ({ onClose, fetchData }) => {
             required
           />
 
-          <div className="flex justify-between mt-6">
+          <div className="flex justify-between mt-6 mb-8">
             <button
               type="button"
               className="px-4 py-2 bg-gray-500 text-white rounded-md"
@@ -253,6 +264,7 @@ const UploadProduct = ({ onClose, fetchData }) => {
             >
               Cancel
             </button>
+
             <button className="px-4 py-2 bg-red-600 text-white rounded-md">
               Upload Product
             </button>

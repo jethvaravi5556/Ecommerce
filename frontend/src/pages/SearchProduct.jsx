@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import SummaryApi from "../common";
 import VerticalCard from "../components/VerticalCard";
 
 const SearchProduct = () => {
   const location = useLocation();
+  const navigate = useNavigate();
+
   const searchKeyword = new URLSearchParams(location.search).get("q");
 
   const [data, setData] = useState([]);
@@ -15,7 +17,6 @@ const SearchProduct = () => {
     try {
       const apiUrl = SummaryApi.SearchProduct.url.trim().replace(/\u200B/g, "");
       const response = await fetch(`${apiUrl}?q=${searchKeyword}`, {
-        //const response = await fetch(apiUrl+query, {
         method: SummaryApi.SearchProduct.method,
         credentials: "include",
         headers: {
@@ -25,6 +26,7 @@ const SearchProduct = () => {
 
       const responseData = await response.json();
       console.log("search data", responseData);
+
       if (responseData.success) {
         setData(responseData.data);
       }
@@ -36,14 +38,17 @@ const SearchProduct = () => {
   };
 
   useEffect(() => {
-    if (searchKeyword) {
-      fetchProduct();
+    if (!searchKeyword) {
+      navigate("/"); // redirect to home page
+      return;
     }
+
+    fetchProduct();
   }, [searchKeyword]);
 
   return (
     <div className="container mx-auto p-4">
-      {loading && <p className="text-lg text-center">loading...</p>}
+      {loading && <p className="text-lg text-center">Loading...</p>}
 
       {!loading && <p>Search Result: {data.length}</p>}
 

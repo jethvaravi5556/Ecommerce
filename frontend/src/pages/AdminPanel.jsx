@@ -2,8 +2,9 @@ import React, { useEffect, useState } from "react";
 import { FaRegUserCircle } from "react-icons/fa";
 import { HiMenuAlt3, HiX } from "react-icons/hi";
 import { useSelector } from "react-redux";
-import { Link, Outlet, useNavigate } from "react-router-dom";
+import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import ROLE from "../common/role";
+import Footer from "../components/Footer";
 
 const AdminPanel = () => {
   const user = useSelector((state) => state?.user?.user);
@@ -17,60 +18,82 @@ const AdminPanel = () => {
   }, [user]);
 
   return (
-    <div className="min-h-[calc(100vh-120px)] flex flex-col md:flex-row relative">
-      {/* Sidebar */}
+    <div className="flex min-h-screen bg-gray-100">
+      {/* SIDEBAR */}
       <aside
-        className={`bg-white md:h-[calc(100vh-90px)] md:sticky md:top-[80px] w-full md:max-w-60 customShadow transition-all duration-300 z-40
-  ${menuOpen ? "block fixed top-0 left-0 h-full" : "hidden md:block"}`}
+        className={`bg-white md:min-h-full w-full md:max-w-60 customShadow transition-all duration-300 z-40
+        ${menuOpen ? "block fixed top-0 left-0 h-full" : "hidden md:block"}`}
       >
-        <div className="h-32 flex justify-center items-center mt-20 flex-col border-b">
-          <div className="text-5xl cursor-pointer relative group flex justify-center">
-            {user?.profilePic ? (
-              <img
-                src={user?.profilePic}
-                className="w-20 h-20 rounded-full object-cover"
-                alt={user?.name}
-              />
-            ) : (
-              <FaRegUserCircle />
-            )}
-          </div>
-          <p className="capitalize font-semibold text-lg">{user?.name}</p>
-          <p className="text-sm">{user?.role}</p>
+        {/* Profile */}
+        <div className="flex flex-col items-center justify-center h-40 border-b pt-4 md:pt-6">
+          {user?.profilePic ? (
+            <img
+              src={user.profilePic}
+              className="w-20 h-20 rounded-full object-cover"
+              alt="user"
+            />
+          ) : (
+            <FaRegUserCircle className="text-6xl text-gray-400" />
+          )}
+
+          <p className="mt-2 font-semibold">{user?.name}</p>
+          <p className="text-sm text-gray-500">{user?.role}</p>
         </div>
 
-        {/* Navigation */}
-        <nav className="grid p-4 space-y-2 text-sm">
-          <Link
+        {/* Menu */}
+        <nav className="flex flex-col gap-2 p-4">
+          <NavLink
             to="/admin-panel/all-users"
-            className="px-2 py-2 hover:bg-slate-100 block"
-            onClick={() => setMenuOpen(false)}
+            className={({ isActive }) =>
+              `p-3 rounded-lg transition ${
+                isActive
+                  ? "bg-blue-100 text-blue-600 font-semibold"
+                  : "hover:bg-gray-100"
+              }`
+            }
+            onClick={() => {
+              setMenuOpen(false);
+            }}
           >
             All Users
-          </Link>
-          <Link
-            to="/admin-panel/all-products"
-            className="px-2 py-2 hover:bg-slate-100 block"
-            onClick={() => setMenuOpen(false)}
-          >
-            All Products
           </Link>
           {/*  */}
         </nav>
       </aside>
 
-      {/* Mobile Menu Toggle */}
-      <button
-        className="absolute top-4 left-4 text-3xl text-gray-700 md:hidden z-50"
-        onClick={() => setMenuOpen((prev) => !prev)}
-      >
-        {menuOpen ? <HiX /> : <HiMenuAlt3 />}
-      </button>
+      {/* OVERLAY - Mobile Only */}
+      {menuOpen && (
+        <div
+          className="fixed inset-0 bg-black/50 md:hidden z-30"
+          onClick={() => setMenuOpen(false)}
+        />
+      )}
 
-      {/* Main Content */}
-      <main className="w-full h-full p-4 pt-16 md:pt-4 overflow-x-auto">
-        <Outlet />
-      </main>
+      {/* MAIN CONTENT WRAPPER */}
+      <div className="flex flex-col flex-1 w-full">
+        {/* MOBILE HEADER */}
+        <header className="md:hidden flex items-center gap-4 bg-white p-4 border-b sticky top-0 z-20">
+          <button
+            className="text-2xl text-gray-700 p-1 hover:bg-gray-100 rounded transition"
+            onClick={() => setMenuOpen(!menuOpen)}
+            aria-label="Toggle sidebar"
+          >
+            {menuOpen ? <HiX /> : <HiMenuAlt3 />}
+          </button>
+
+          <h2 className="font-semibold text-lg">Admin Panel</h2>
+        </header>
+
+        {/* PAGE CONTENT */}
+        <main className="flex-1 p-4 md:p-8 overflow-x-auto">
+          <div className="w-full md:max-w-7xl md:mx-auto">
+            <Outlet />
+          </div>
+        </main>
+
+        {/* FOOTER */}
+        <Footer />
+      </div>
     </div>
   );
 };

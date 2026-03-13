@@ -120,8 +120,19 @@ const Header = () => {
               )}
 
               {user?._id && (
+<<<<<<< HEAD
+                <Link
+                  to="/saved-items"
+                  className="relative text-2xl text-red-500"
+                >
+=======
                 <Link to="/saved-items" className="text-2xl text-red-500">
+>>>>>>> 8b7df25621484fca19baaff132fe414fc73ebd4f
                   <AiFillHeart />
+
+                  <div className="bg-red-600 text-white rounded-full w-5 h-5 text-xs flex items-center justify-center absolute -top-2 -right-3">
+                    {context?.savedItemCount || 0}
+                  </div>
                 </Link>
               )}
 
@@ -226,10 +237,17 @@ const Header = () => {
 
       {/* MOBILE MENU */}
       {menuOpen && (
+<<<<<<< HEAD
+        <div className="lg:hidden bg-white border-t shadow-md px-4 py-4 space-y-3">
+          {/* USER SIDE SEARCH */}
+          {!isAdminPanel && (
+            <div className="flex items-center border rounded-full px-3 py-2">
+=======
         <div className="lg:hidden bg-white px-4 py-4 border-t space-y-3">
           {/* MOBILE SEARCH (ONLY USER SIDE) */}
           {!isAdminPanel && (
             <div className="flex items-center border rounded-full px-2">
+>>>>>>> 8b7df25621484fca19baaff132fe414fc73ebd4f
               <input
                 type="text"
                 placeholder="Search..."
@@ -243,6 +261,23 @@ const Header = () => {
 
           {user?._id ? (
             <>
+<<<<<<< HEAD
+              {/* PROFILE */}
+              <Link
+                to="/profile"
+                onClick={() => setMenuOpen(false)}
+                className="block py-2 border-b"
+              >
+                My Profile
+              </Link>
+
+              {/* ADMIN PANEL */}
+              {user?.role === ROLE.ADMIN && (
+                <Link
+                  to="/admin-panel/all-users"
+                  onClick={() => setMenuOpen(false)}
+                  className="block py-2 border-b"
+=======
               <Link to="/profile" onClick={() => setMenuOpen(false)}>
                 My Profile
               </Link>
@@ -251,23 +286,75 @@ const Header = () => {
                 <Link
                   to="/admin-panel/all-users"
                   onClick={() => setMenuOpen(false)}
+>>>>>>> 8b7df25621484fca19baaff132fe414fc73ebd4f
                 >
                   Admin Panel
                 </Link>
               )}
 
+<<<<<<< HEAD
+              {/* ORDERS */}
+              {!isAdminPanel && (
+                <Link
+                  to="/order"
+                  onClick={() => setMenuOpen(false)}
+                  className="block py-2 border-b"
+                >
+                  Orders
+                </Link>
+              )}
+
+              {/* SAVED ITEMS */}
+              {!isAdminPanel && (
+                <Link
+                  to="/saved-items"
+                  onClick={() => setMenuOpen(false)}
+                  className="block py-2 border-b"
+                >
+                  Saved Items
+                </Link>
+              )}
+
+              {/* BUY BUTTON (ADMIN PANEL ONLY) */}
+              {isAdminPanel && user?.role === ROLE.ADMIN && (
+                <Link
+                  to="/"
+                  onClick={() => setMenuOpen(false)}
+                  className="block bg-red-600 text-white px-4 py-2 rounded-lg text-center"
+                >
+                  Buy
+                </Link>
+              )}
+
+              {/* LOGOUT */}
+=======
+>>>>>>> 8b7df25621484fca19baaff132fe414fc73ebd4f
               <button
                 onClick={() => {
                   handleLogout();
                   setMenuOpen(false);
                 }}
+<<<<<<< HEAD
+                className="flex items-center gap-2 text-red-600 py-2"
+              >
+                <FiLogOut />
+=======
                 className="text-red-600"
               >
+>>>>>>> 8b7df25621484fca19baaff132fe414fc73ebd4f
                 Logout
               </button>
             </>
           ) : (
+<<<<<<< HEAD
+            <Link
+              to="/login"
+              onClick={() => setMenuOpen(false)}
+              className="block bg-red-600 text-white px-4 py-2 rounded-lg text-center"
+            >
+=======
             <Link to="/login" onClick={() => setMenuOpen(false)}>
+>>>>>>> 8b7df25621484fca19baaff132fe414fc73ebd4f
               Login
             </Link>
           )}

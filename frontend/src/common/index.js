@@ -35,54 +35,7 @@ const SummaryApi = {
     url: `${backendDomain}/api/update-users`,
     method: "post",
   },
-  allProduct: {
-    url: `${backendDomain}/api/all-products`,
-    method: "get",
-  },
-  uploadProduct: {
-    url: `${backendDomain}/api/upload-product`,
-    method: "post",
-  },
-  // allProduct: {
-  //   url: `${backendDomain}/api/get-product`,
-  //   method: "get",
-  // },
-  updateProduct: {
-    url: `${backendDomain}/api/update-product`,
-    method: "post",
-  },
-  categoryProduct: {
-    url: `${backendDomain}/api/get-categoryproduct`,
-    method: "get",
-  },
-  categoryWiseProduct: {
-    url: `${backendDomain}/api/category-product`,
-    method: "post",
-  },
-  productDetails: {
-    url: `${backendDomain}/api/product-detail`,
-    method: "post",
-  },
-  psaveItem: {
-    url: `${backendDomain}/api/save-item`,
-    method: "post",
-  },
-  gsaveItem: {
-    url: `${backendDomain}/api/saved-items`,
-    method: "get",
-  },
-  unsaveItem: {
-    url: `${backendDomain}/api/unsave-item`,
-    method: "post",
-  },
-  SearchProduct: {
-    url: `${backendDomain}/api/search`,
-    method: "get",
-  },
-  filterProduct: {
-    url: `${backendDomain}/api/filterproduct`,
-    method: "post",
-  },
+
   sendOtp: {
     url: `${backendDomain}/api/send-otp`,
     method: "post",

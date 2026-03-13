@@ -1,4 +1,8 @@
+<<<<<<< HEAD
+import React, { useState, useEffect } from "react";
+=======
 import React, { useState } from "react";
+>>>>>>> 8b7df25621484fca19baaff132fe414fc73ebd4f
 import productCategory from "../helpers/productCategory";
 import { FaCloudUploadAlt } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
@@ -22,6 +26,18 @@ const AdminEditProduct = ({ productData, onClose, fetchData }) => {
   const [openFullScreenImage, setOpenFullScreenImage] = useState(false);
   const [fullScreenImage, setFullScreenImage] = useState("");
 
+<<<<<<< HEAD
+  // Prevent background scroll
+  useEffect(() => {
+    document.body.style.overflow = "hidden";
+
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, []);
+
+=======
+>>>>>>> 8b7df25621484fca19baaff132fe414fc73ebd4f
   const handleOnChange = (e) => {
     const { name, value } = e.target;
     setData((prev) => ({
@@ -41,10 +57,18 @@ const AdminEditProduct = ({ productData, onClose, fetchData }) => {
 
     try {
       const uploadImageCloudinary = await uploadImage(file);
+<<<<<<< HEAD
+
+=======
+>>>>>>> 8b7df25621484fca19baaff132fe414fc73ebd4f
       setData((prev) => ({
         ...prev,
         productImage: [...prev.productImage, uploadImageCloudinary.url],
       }));
+<<<<<<< HEAD
+
+=======
+>>>>>>> 8b7df25621484fca19baaff132fe414fc73ebd4f
       console.log("Uploaded Image URL:", uploadImageCloudinary.url);
     } catch (error) {
       toast.error("Image upload failed.");
@@ -52,6 +76,16 @@ const AdminEditProduct = ({ productData, onClose, fetchData }) => {
     }
   };
 
+<<<<<<< HEAD
+  const handleDeleteProductImage = (index) => {
+    const newProductImage = [...data.productImage];
+    newProductImage.splice(index, 1);
+
+    setData((prev) => ({
+      ...prev,
+      productImage: newProductImage,
+    }));
+=======
   const handleDeleteProductImage = async (index) => {
     const newProductImage = [...data.productImage];
     newProductImage.splice(index, 1);
@@ -61,6 +95,7 @@ const AdminEditProduct = ({ productData, onClose, fetchData }) => {
         productImage: [...newProductImage],
       };
     });
+>>>>>>> 8b7df25621484fca19baaff132fe414fc73ebd4f
   };
 
   const handleSubmit = async (e) => {
@@ -112,7 +147,11 @@ const AdminEditProduct = ({ productData, onClose, fetchData }) => {
         <div className="font-bold text-lg pb-3">Edit Product</div>
 
         <form
+<<<<<<< HEAD
+          className="grid p-4 gap-2 h-full pb-5 overflow-y-auto"
+=======
           className="grid p-4 gap-2 h-full pb-5 overflow-y-scroll"
+>>>>>>> 8b7df25621484fca19baaff132fe414fc73ebd4f
           onSubmit={handleSubmit}
         >
           <label htmlFor="productName">Product Name:</label>
@@ -144,6 +183,10 @@ const AdminEditProduct = ({ productData, onClose, fetchData }) => {
           <label htmlFor="category" className="mt-4">
             Category:
           </label>
+<<<<<<< HEAD
+
+=======
+>>>>>>> 8b7df25621484fca19baaff132fe414fc73ebd4f
           <select
             value={data.category}
             name="category"
@@ -162,14 +205,25 @@ const AdminEditProduct = ({ productData, onClose, fetchData }) => {
           <label htmlFor="productImage" className="mt-4">
             Product Image:
           </label>
+<<<<<<< HEAD
+
+          <label htmlFor="uploadImageInput">
+            <div className="p-2 bg-slate-100 border rounded h-32 w-full flex justify-center items-center cursor-pointer">
+              <div className="text-slate-500 flex flex-col items-center gap-2">
+=======
           <label htmlFor="uploadImageInput">
             <div className="p-2 bg-slate-100 border rounded h-32 w-full flex justify-center items-center cursor-pointer">
               <div className="text-slate-500 flex justify-center items-center flex-col gap-2">
+>>>>>>> 8b7df25621484fca19baaff132fe414fc73ebd4f
                 <span className="text-4xl">
                   <FaCloudUploadAlt />
                 </span>
                 <p className="text-sm">Upload Product Image</p>
               </div>
+<<<<<<< HEAD
+
+=======
+>>>>>>> 8b7df25621484fca19baaff132fe414fc73ebd4f
               <input
                 type="file"
                 id="uploadImageInput"
@@ -180,7 +234,11 @@ const AdminEditProduct = ({ productData, onClose, fetchData }) => {
           </label>
 
           {data.productImage.length > 0 && (
+<<<<<<< HEAD
+            <div className="flex items-center gap-2 flex-wrap">
+=======
             <div className="flex items-center gap-2">
+>>>>>>> 8b7df25621484fca19baaff132fe414fc73ebd4f
               {data.productImage.map((img, index) => (
                 <div key={index} className="relative group">
                   <img
@@ -194,6 +252,10 @@ const AdminEditProduct = ({ productData, onClose, fetchData }) => {
                       setFullScreenImage(img);
                     }}
                   />
+<<<<<<< HEAD
+
+=======
+>>>>>>> 8b7df25621484fca19baaff132fe414fc73ebd4f
                   <div
                     className="absolute bottom-0 right-0 p-1 rounded-full bg-red-500 text-white hidden group-hover:block cursor-pointer"
                     onClick={() => handleDeleteProductImage(index)}
@@ -208,6 +270,10 @@ const AdminEditProduct = ({ productData, onClose, fetchData }) => {
           <label htmlFor="price" className="mt-4">
             Price:
           </label>
+<<<<<<< HEAD
+
+=======
+>>>>>>> 8b7df25621484fca19baaff132fe414fc73ebd4f
           <input
             type="number"
             id="price"
@@ -222,6 +288,10 @@ const AdminEditProduct = ({ productData, onClose, fetchData }) => {
           <label htmlFor="sellingPrice" className="mt-4">
             Selling Price:
           </label>
+<<<<<<< HEAD
+
+=======
+>>>>>>> 8b7df25621484fca19baaff132fe414fc73ebd4f
           <input
             type="number"
             id="sellingPrice"
@@ -236,8 +306,14 @@ const AdminEditProduct = ({ productData, onClose, fetchData }) => {
           <label htmlFor="description" className="mt-4">
             Description:
           </label>
+<<<<<<< HEAD
+
+          <textarea
+            className="h-28 bg-slate-100 border resize-none p-2"
+=======
           <textarea
             className="h-28 bg-slate-100 border resize-none p-1"
+>>>>>>> 8b7df25621484fca19baaff132fe414fc73ebd4f
             id="description"
             placeholder="Enter Product Description"
             name="description"
@@ -254,8 +330,14 @@ const AdminEditProduct = ({ productData, onClose, fetchData }) => {
             >
               Cancel
             </button>
+<<<<<<< HEAD
+
+            <button className="px-4 py-2 bg-red-600 text-white rounded-md">
+              Update Product
+=======
             <button className="px-4 py-2 bg-red-600 text-white rounded-md">
               Upload Product
+>>>>>>> 8b7df25621484fca19baaff132fe414fc73ebd4f
             </button>
           </div>
         </form>

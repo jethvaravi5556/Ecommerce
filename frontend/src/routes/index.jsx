@@ -1,4 +1,4 @@
-import { createBrowserRouter, Navigate } from "react-router-dom";
+import { createBrowserRouter } from "react-router-dom";
 import App from "../App";
 
 import Login from "../pages/Login";
@@ -15,6 +15,9 @@ import SavedItems from "../pages/SavedItems";
 import SearchProduct from "../pages/SearchProduct";
 import AllProducts from "../pages/AllProducts";
 import Profile from "../pages/Profile";
+import ProductDetails from "../pages/ProductDetails";
+import Cart from "../pages/Cart";
+import CategoryProduct from "../pages/CategoryProduct";
 
 const router = createBrowserRouter([
   {
@@ -30,7 +33,7 @@ const router = createBrowserRouter([
         element: <Login />,
       },
       {
-        path: "forgot-Password",
+        path: "forgot-password",
         element: <ForgotPassword />,
       },
       {
@@ -38,7 +41,7 @@ const router = createBrowserRouter([
         element: <SignUp />,
       },
       {
-        path: "/profile",
+        path: "profile",
         element: <Profile />,
       },
       {
@@ -46,8 +49,20 @@ const router = createBrowserRouter([
         element: <SearchProduct />,
       },
       {
-        path: "/saved-items",
+        path: "saved-items",
         element: <SavedItems />,
+      },
+      {
+        path: "product-category",
+        element: <CategoryProduct />,
+      },
+      {
+        path: "product/:id",
+        element: <ProductDetails />,
+      },
+      {
+        path: "cart",
+        element: <Cart />,
       },
       {
         path: "success",
@@ -57,20 +72,14 @@ const router = createBrowserRouter([
         path: "cancel",
         element: <Cancel />,
       },
-
       {
-        path: "/forgot-password",
-        element: <ForgotPassword />,
-      },
-      {
-        path: "/verify-otp",
+        path: "verify-otp",
         element: <VerifyOtp />,
       },
       {
-        path: "/reset-password",
+        path: "reset-password",
         element: <ResetPassword />,
       },
-
       {
         path: "admin-panel",
         element: <AdminPanel />,

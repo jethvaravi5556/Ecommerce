@@ -32,7 +32,7 @@ const AllUsers = () => {
 
   const handleDeleteUser = async (id) => {
     const confirmDelete = window.confirm(
-      "Are you sure you want to delete this user?",
+      "Are you sure you want to delete this user?"
     );
 
     if (!confirmDelete) return;
@@ -53,7 +53,7 @@ const AllUsers = () => {
   };
 
   const filteredUsers = allUsers.filter((user) =>
-    filterRole ? user.role === filterRole : true,
+    filterRole ? user.role === filterRole : true
   );
 
   return (
@@ -74,8 +74,8 @@ const AllUsers = () => {
       </div>
 
       {/* Table */}
-      <div className="bg-white p-4 mt-4 rounded overflow-x-auto">
-        <table className="min-w-[700px] w-full userTable">
+      <div className="bg-white p-4 mt-4 rounded w-full overflow-x-auto">
+        <table className="min-w-[700px] w-full text-sm whitespace-nowrap">
           <thead>
             <tr className="bg-black text-white">
               <th>Sr.</th>
@@ -89,30 +89,34 @@ const AllUsers = () => {
 
           <tbody>
             {filteredUsers.map((user, index) => (
-              <tr key={user._id} className="text-center">
-                <td>{index + 1}</td>
-                <td>{user.name}</td>
-                <td>{user.email}</td>
-                <td>{user.role}</td>
-                <td>{moment(user.createdAt).format("LL")}</td>
+              <tr key={user._id} className="text-center border-b">
+                <td className="p-2">{index + 1}</td>
+                <td className="p-2">{user.name}</td>
+                <td className="p-2">{user.email}</td>
+                <td className="p-2">{user.role}</td>
+                <td className="p-2">
+                  {moment(user.createdAt).format("LL")}
+                </td>
 
-                <td className="flex justify-center gap-2">
-                  <button
-                    className="bg-green-100 p-2 rounded-full hover:bg-green-500 hover:text-white"
-                    onClick={() => {
-                      setUpdateUserDetails(user);
-                      setOpenUpdateRole(true);
-                    }}
-                  >
-                    <MdModeEdit />
-                  </button>
+                <td className="p-2">
+                  <div className="flex justify-center gap-2">
+                    <button
+                      className="bg-green-100 p-2 rounded-full hover:bg-green-500 hover:text-white"
+                      onClick={() => {
+                        setUpdateUserDetails(user);
+                        setOpenUpdateRole(true);
+                      }}
+                    >
+                      <MdModeEdit />
+                    </button>
 
-                  <button
-                    className="bg-red-100 p-2 rounded-full hover:bg-red-600 hover:text-white"
-                    onClick={() => handleDeleteUser(user._id)}
-                  >
-                    <MdDelete />
-                  </button>
+                    <button
+                      className="bg-red-100 p-2 rounded-full hover:bg-red-600 hover:text-white"
+                      onClick={() => handleDeleteUser(user._id)}
+                    >
+                      <MdDelete />
+                    </button>
+                  </div>
                 </td>
               </tr>
             ))}

@@ -6,8 +6,8 @@ import AdminProductCard from "../components/AdminProductCard";
 
 const AllProducts = () => {
   const [allProducts, setAllProducts] = useState([]);
+  const [filterCategory, setFilterCategory] = useState("");
   const [openUploadProduct, setOpenUploadProduct] = useState(false);
-  const [updateUserDetails, setUpdateUserDetails] = useState(null);
 
   const fetchAllProducts = async () => {
     const fetchData = await fetch(SummaryApi.allProduct.url, {
@@ -18,7 +18,6 @@ const AllProducts = () => {
     const dataResponse = await fetchData.json();
 
     if (dataResponse.success) {
-      console.log(dataResponse?.data);
       setAllProducts(dataResponse?.data || []);
     } else {
       toast.error(dataResponse.message);
@@ -29,38 +28,62 @@ const AllProducts = () => {
     fetchAllProducts();
   }, []);
 
+  const categoryList = [
+    ...new Set(allProducts.map((product) => product.category)),
+  ];
+
+  const filteredProducts = allProducts.filter((product) =>
+    filterCategory ? product.category === filterCategory : true,
+  );
+
   return (
     <div>
-      <div className="bg-white py-2 px-4 flex justify-between items-center">
+      {/* Header */}
+      <div className="bg-white py-3 px-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 rounded">
         <h2 className="font-bold text-lg">All Products</h2>
-        <button
-          className="border-2 border-red-500 text-red-500 hover:bg-red-500 hover:text-white py-1 px-3 rounded-full transition-all"
-          onClick={() => setOpenUploadProduct(true)}
-        >
-          Upload Product
-        </button>
+
+        <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+          <select
+            className="border p-2 rounded w-full sm:w-auto"
+            value={filterCategory}
+            onChange={(e) => setFilterCategory(e.target.value)}
+          >
+            <option value="">All Products</option>
+
+            {categoryList.map((cat, index) => (
+              <option key={index}>{cat}</option>
+            ))}
+          </select>
+
+          <button
+            className="border-2 border-red-500 text-red-500 hover:bg-red-500 hover:text-white py-2 px-3 rounded-full transition-all"
+            onClick={() => setOpenUploadProduct(true)}
+          >
+            Upload Product
+          </button>
+        </div>
       </div>
 
-      {/* all product */}
-
-      <div className="flex items-center flex-wrap gap-5 py-4 h-[calc(100vh-180px)] overflow-y-scroll">
-        {allProducts.map((product, index) => {
-          return (
-            <AdminProductCard
-              data={product}
-              key={index + "allProduct"}
-              fetchData={fetchAllProducts}
-            />
-          );
-        })}
+      {/* Products */}
+      <div className="flex flex-wrap justify-center sm:justify-start gap-5 py-6">
+        {filteredProducts.map((product, index) => (
+          <AdminProductCard
+            data={product}
+            key={index}
+            fetchData={fetchAllProducts}
+          />
+        ))}
       </div>
 
-      {/* upload Product Compenent */}
       {openUploadProduct && (
         <UploadProduct
           onClose={() => setOpenUploadProduct(false)}
           fetchData={fetchAllProducts}
         />
+      )}
+
+      {!filteredProducts.length && (
+        <p className="text-center mt-4">No Products Found</p>
       )}
     </div>
   );

@@ -20,8 +20,8 @@ const AdminPanel = () => {
     <div className="min-h-[calc(100vh-120px)] flex flex-col md:flex-row relative">
       {/* Sidebar */}
       <aside
-        className={`bg-white md:min-h-full w-full md:max-w-60 customShadow transition-all duration-300 z-40
-        ${menuOpen ? "block fixed top-0 left-0 h-full" : "hidden md:block"}`}
+        className={`bg-white md:h-[calc(100vh-90px)] md:sticky md:top-[80px] w-full md:max-w-60 customShadow transition-all duration-300 z-40
+  ${menuOpen ? "block fixed top-0 left-0 h-full" : "hidden md:block"}`}
       >
         <div className="h-32 flex justify-center items-center mt-20 flex-col border-b">
           <div className="text-5xl cursor-pointer relative group flex justify-center">
@@ -47,6 +47,13 @@ const AdminPanel = () => {
             onClick={() => setMenuOpen(false)}
           >
             All Users
+          </Link>
+          <Link
+            to="/admin-panel/all-products"
+            className="px-2 py-2 hover:bg-slate-100 block"
+            onClick={() => setMenuOpen(false)}
+          >
+            All Products
           </Link>
           {/*  */}
         </nav>

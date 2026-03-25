@@ -6,10 +6,18 @@ import bodyParser from "body-parser";
 
 import connectDB from "./config/db.js";
 import router from "./routes/index.js";
+import webhookController from "./controller/order/webhookController.js";
 
 dotenv.config();
 
 const app = express();
+
+// Stripe webhook route must come BEFORE express.json
+app.post(
+  "/api/webhook",
+  bodyParser.raw({ type: "application/json" }),
+  webhookController,
+);
 
 // Middleware
 app.use(

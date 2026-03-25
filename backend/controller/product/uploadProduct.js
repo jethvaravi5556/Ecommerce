@@ -14,7 +14,45 @@ async function uploadProductController(req, res) {
       });
     }
 
-    const newProduct = new productModel(req.body);
+    const { productName, price, sellingPrice } = req.body;
+
+    if (!productName || productName.trim().length < 3) {
+      return res.status(400).json({
+        message: "Product name must be at least 3 characters",
+        success: false,
+        error: true,
+      });
+    }
+
+    if (typeof price !== "number" || price < 1 || price > 10000000) {
+      return res.status(400).json({
+        message: "Price must be between ₹1 and ₹1,00,00,000",
+        success: false,
+        error: true,
+      });
+    }
+
+    if (typeof sellingPrice !== "number" || sellingPrice < 1) {
+      return res.status(400).json({
+        message: "Invalid selling price",
+        success: false,
+        error: true,
+      });
+    }
+
+    if (sellingPrice > price) {
+      return res.status(400).json({
+        message: "Selling price cannot be greater than price",
+        success: false,
+        error: true,
+      });
+    }
+
+    const newProduct = new productModel({
+      ...req.body,
+      productName: productName.trim(),
+    });
+
     const savedProduct = await newProduct.save();
 
     res.status(200).json({

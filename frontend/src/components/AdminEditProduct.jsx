@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 import React, { useState, useEffect } from "react";
-=======
-import React, { useState } from "react";
->>>>>>> 8b7df25621484fca19baaff132fe414fc73ebd4f
 import productCategory from "../helpers/productCategory";
 import { FaCloudUploadAlt } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
@@ -14,30 +10,18 @@ import SummaryApi from "../common";
 const AdminEditProduct = ({ productData, onClose, fetchData }) => {
   const [data, setData] = useState({
     ...productData,
-    productName: productData?.productName,
-    brandName: productData?.brandName,
-    category: productData?.category,
     productImage: productData?.productImage || [],
-    description: productData?.description,
-    price: productData?.price,
-    sellingPrice: productData?.sellingPrice,
   });
 
   const [openFullScreenImage, setOpenFullScreenImage] = useState(false);
   const [fullScreenImage, setFullScreenImage] = useState("");
 
-<<<<<<< HEAD
-  // Prevent background scroll
+  // prevent background scroll
   useEffect(() => {
     document.body.style.overflow = "hidden";
-
-    return () => {
-      document.body.style.overflow = "auto";
-    };
+    return () => (document.body.style.overflow = "auto");
   }, []);
 
-=======
->>>>>>> 8b7df25621484fca19baaff132fe414fc73ebd4f
   const handleOnChange = (e) => {
     const { name, value } = e.target;
     setData((prev) => ({
@@ -49,53 +33,28 @@ const AdminEditProduct = ({ productData, onClose, fetchData }) => {
 
   const handleUploadProduct = async (e) => {
     const file = e.target.files[0];
-
-    if (!file) {
-      toast.error("No file selected.");
-      return;
-    }
+    if (!file) return toast.error("No file selected");
 
     try {
-      const uploadImageCloudinary = await uploadImage(file);
-<<<<<<< HEAD
+      const res = await uploadImage(file);
 
-=======
->>>>>>> 8b7df25621484fca19baaff132fe414fc73ebd4f
       setData((prev) => ({
         ...prev,
-        productImage: [...prev.productImage, uploadImageCloudinary.url],
+        productImage: [...prev.productImage, res.url],
       }));
-<<<<<<< HEAD
-
-=======
->>>>>>> 8b7df25621484fca19baaff132fe414fc73ebd4f
-      console.log("Uploaded Image URL:", uploadImageCloudinary.url);
-    } catch (error) {
-      toast.error("Image upload failed.");
-      console.error("Image Upload Error:", error);
+    } catch {
+      toast.error("Image upload failed");
     }
   };
 
-<<<<<<< HEAD
   const handleDeleteProductImage = (index) => {
-    const newProductImage = [...data.productImage];
-    newProductImage.splice(index, 1);
+    const arr = [...data.productImage];
+    arr.splice(index, 1);
 
     setData((prev) => ({
       ...prev,
-      productImage: newProductImage,
+      productImage: arr,
     }));
-=======
-  const handleDeleteProductImage = async (index) => {
-    const newProductImage = [...data.productImage];
-    newProductImage.splice(index, 1);
-    setData((preve) => {
-      return {
-        ...preve,
-        productImage: [...newProductImage],
-      };
-    });
->>>>>>> 8b7df25621484fca19baaff132fe414fc73ebd4f
   };
 
   const handleSubmit = async (e) => {
@@ -107,237 +66,144 @@ const AdminEditProduct = ({ productData, onClose, fetchData }) => {
       !data.category ||
       !data.productImage.length
     ) {
-      toast.error(
-        "All fields are required, including at least one product image.",
-      );
-      return;
+      return toast.error("All fields required");
     }
 
     try {
-      const apiUrl = SummaryApi.updateProduct.url.trim().replace(/\u200B/g, "");
-
-      const response = await fetch(apiUrl, {
+      const response = await fetch(SummaryApi.updateProduct.url, {
         method: SummaryApi.updateProduct.method,
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
+        headers: { "Content-Type": "application/json" },
         credentials: "include",
+        body: JSON.stringify(data),
       });
 
-      const dataApi = await response.json();
+      const res = await response.json();
 
-      if (dataApi.success) {
-        toast.success(dataApi.message);
+      if (res.success) {
+        toast.success(res.message);
         onClose();
         fetchData();
       } else {
-        console.error("API Error:", dataApi.message);
-        toast.error(dataApi.message || "Something went wrong");
+        toast.error(res.message);
       }
-    } catch (error) {
-      console.error("Error:", error);
-      toast.error("Error connecting to the server");
+    } catch {
+      toast.error("Server error");
     }
   };
 
   return (
-    <div className="fixed top-0 bottom-0 left-0 right-0 w-full h-full z-10 flex justify-center items-center bg-black bg-opacity-50">
-      <div className="bg-white p-4 max-h-[80%] shadow-md h-full w-full max-w-2xl rounded-lg overflow-hidden">
-        <div className="font-bold text-lg pb-3">Edit Product</div>
+    <div className="fixed inset-0 bg-black/50 z-50 flex justify-center items-center">
+      <div className="bg-white p-4 w-full max-w-2xl rounded-lg h-[80%] overflow-hidden">
+        <h2 className="font-bold text-lg pb-3">Edit Product</h2>
 
         <form
-<<<<<<< HEAD
-          className="grid p-4 gap-2 h-full pb-5 overflow-y-auto"
-=======
-          className="grid p-4 gap-2 h-full pb-5 overflow-y-scroll"
->>>>>>> 8b7df25621484fca19baaff132fe414fc73ebd4f
           onSubmit={handleSubmit}
+          className="grid gap-2 p-4 h-full overflow-y-auto"
         >
-          <label htmlFor="productName">Product Name:</label>
+          <label>Product Name</label>
           <input
-            type="text"
-            id="productName"
-            placeholder="Enter the Product Name"
             name="productName"
             value={data.productName}
             onChange={handleOnChange}
-            className="bg-slate-100 border rounded p-2"
-            required
+            className="bg-slate-100 p-2 border rounded"
           />
 
-          <label htmlFor="brandName" className="mt-4">
-            Brand Name:
-          </label>
+          <label className="mt-3">Brand Name</label>
           <input
-            type="text"
-            id="brandName"
-            placeholder="Enter the Brand Name"
             name="brandName"
             value={data.brandName}
             onChange={handleOnChange}
-            className="bg-slate-100 border rounded p-2"
-            required
+            className="bg-slate-100 p-2 border rounded"
           />
 
-          <label htmlFor="category" className="mt-4">
-            Category:
-          </label>
-<<<<<<< HEAD
-
-=======
->>>>>>> 8b7df25621484fca19baaff132fe414fc73ebd4f
+          <label className="mt-3">Category</label>
           <select
-            value={data.category}
             name="category"
+            value={data.category}
             onChange={handleOnChange}
-            className="bg-slate-100 border rounded p-2"
-            required
+            className="bg-slate-100 p-2 border rounded"
           >
-            <option value="">Select Category:</option>
-            {productCategory.map((item, index) => (
-              <option key={index} value={item.value}>
-                {item.label}
+            <option value="">Select</option>
+            {productCategory.map((c, i) => (
+              <option key={i} value={c.value}>
+                {c.label}
               </option>
             ))}
           </select>
 
-          <label htmlFor="productImage" className="mt-4">
-            Product Image:
-          </label>
-<<<<<<< HEAD
+          <label className="mt-3">Product Image</label>
 
-          <label htmlFor="uploadImageInput">
-            <div className="p-2 bg-slate-100 border rounded h-32 w-full flex justify-center items-center cursor-pointer">
-              <div className="text-slate-500 flex flex-col items-center gap-2">
-=======
-          <label htmlFor="uploadImageInput">
-            <div className="p-2 bg-slate-100 border rounded h-32 w-full flex justify-center items-center cursor-pointer">
-              <div className="text-slate-500 flex justify-center items-center flex-col gap-2">
->>>>>>> 8b7df25621484fca19baaff132fe414fc73ebd4f
-                <span className="text-4xl">
-                  <FaCloudUploadAlt />
-                </span>
-                <p className="text-sm">Upload Product Image</p>
-              </div>
-<<<<<<< HEAD
-
-=======
->>>>>>> 8b7df25621484fca19baaff132fe414fc73ebd4f
+          <label>
+            <div className="h-32 border bg-slate-100 flex justify-center items-center cursor-pointer">
+              <FaCloudUploadAlt size={40} />
               <input
                 type="file"
-                id="uploadImageInput"
                 className="hidden"
                 onChange={handleUploadProduct}
               />
             </div>
           </label>
 
-          {data.productImage.length > 0 && (
-<<<<<<< HEAD
-            <div className="flex items-center gap-2 flex-wrap">
-=======
-            <div className="flex items-center gap-2">
->>>>>>> 8b7df25621484fca19baaff132fe414fc73ebd4f
-              {data.productImage.map((img, index) => (
-                <div key={index} className="relative group">
-                  <img
-                    src={img}
-                    alt="Product"
-                    width={80}
-                    height={80}
-                    className="bg-slate-100 border cursor-pointer"
-                    onClick={() => {
-                      setOpenFullScreenImage(true);
-                      setFullScreenImage(img);
-                    }}
-                  />
-<<<<<<< HEAD
+          <div className="flex gap-2 flex-wrap">
+            {data.productImage.map((img, i) => (
+              <div key={i} className="relative group">
+                <img
+                  src={img}
+                  width={80}
+                  className="border cursor-pointer"
+                  onClick={() => {
+                    setOpenFullScreenImage(true);
+                    setFullScreenImage(img);
+                  }}
+                />
 
-=======
->>>>>>> 8b7df25621484fca19baaff132fe414fc73ebd4f
-                  <div
-                    className="absolute bottom-0 right-0 p-1 rounded-full bg-red-500 text-white hidden group-hover:block cursor-pointer"
-                    onClick={() => handleDeleteProductImage(index)}
-                  >
-                    <MdDelete />
-                  </div>
+                <div
+                  className="absolute bottom-0 right-0 bg-red-500 text-white p-1 hidden group-hover:block cursor-pointer"
+                  onClick={() => handleDeleteProductImage(i)}
+                >
+                  <MdDelete />
                 </div>
-              ))}
-            </div>
-          )}
+              </div>
+            ))}
+          </div>
 
-          <label htmlFor="price" className="mt-4">
-            Price:
-          </label>
-<<<<<<< HEAD
-
-=======
->>>>>>> 8b7df25621484fca19baaff132fe414fc73ebd4f
+          <label className="mt-3">Price</label>
           <input
             type="number"
-            id="price"
-            placeholder="Enter the Price"
             name="price"
             value={data.price}
             onChange={handleOnChange}
-            className="bg-slate-100 border rounded p-2"
-            required
+            className="bg-slate-100 p-2 border rounded"
           />
 
-          <label htmlFor="sellingPrice" className="mt-4">
-            Selling Price:
-          </label>
-<<<<<<< HEAD
-
-=======
->>>>>>> 8b7df25621484fca19baaff132fe414fc73ebd4f
+          <label className="mt-3">Selling Price</label>
           <input
             type="number"
-            id="sellingPrice"
-            placeholder="Enter the Selling Price"
             name="sellingPrice"
             value={data.sellingPrice}
             onChange={handleOnChange}
-            className="bg-slate-100 border rounded p-2"
-            required
+            className="bg-slate-100 p-2 border rounded"
           />
 
-          <label htmlFor="description" className="mt-4">
-            Description:
-          </label>
-<<<<<<< HEAD
-
+          <label className="mt-3">Description</label>
           <textarea
-            className="h-28 bg-slate-100 border resize-none p-2"
-=======
-          <textarea
-            className="h-28 bg-slate-100 border resize-none p-1"
->>>>>>> 8b7df25621484fca19baaff132fe414fc73ebd4f
-            id="description"
-            placeholder="Enter Product Description"
             name="description"
             value={data.description}
             onChange={handleOnChange}
-            required
+            className="bg-slate-100 p-2 border h-28 resize-none"
           />
 
-          <div className="flex justify-between mt-6 mb-8">
+          <div className="flex justify-between mt-5">
             <button
               type="button"
-              className="px-4 py-2 bg-gray-500 text-white rounded-md"
               onClick={onClose}
+              className="bg-gray-500 text-white px-4 py-2 rounded"
             >
               Cancel
             </button>
-<<<<<<< HEAD
 
-            <button className="px-4 py-2 bg-red-600 text-white rounded-md">
+            <button className="bg-red-600 text-white px-4 py-2 rounded">
               Update Product
-=======
-            <button className="px-4 py-2 bg-red-600 text-white rounded-md">
-              Upload Product
->>>>>>> 8b7df25621484fca19baaff132fe414fc73ebd4f
             </button>
           </div>
         </form>
@@ -345,8 +211,8 @@ const AdminEditProduct = ({ productData, onClose, fetchData }) => {
 
       {openFullScreenImage && (
         <DisplayImage
-          onClose={() => setOpenFullScreenImage(false)}
           imgurl={fullScreenImage}
+          onClose={() => setOpenFullScreenImage(false)}
         />
       )}
     </div>

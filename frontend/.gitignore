@@ -1,6 +1,6 @@
 # Dependency directory
 node_modules
-
+frontend/dist
 # Build output
 build/
 

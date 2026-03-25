@@ -19,6 +19,14 @@ const SummaryApi = {
     url: `${backendDomain}/api/user-logout`,
     method: "post",
   },
+  userProfile: {
+    url: `${backendDomain}/api/user-profile`,
+    method: "get",
+  },
+  updateProfile: {
+    url: `${backendDomain}/api/update-profile`,
+    method: "put",
+  },
   AllUsers: {
     url: `${backendDomain}/api/all-users`,
     method: "get",

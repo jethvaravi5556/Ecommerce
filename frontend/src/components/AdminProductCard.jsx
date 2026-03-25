@@ -5,29 +5,34 @@ import displayINRCurrency from "../helpers/displayCurrency";
 
 const AdminProductCard = ({ data, fetchData }) => {
   const [editProduct, setEditProduct] = useState(false);
-  return (
-    <div className="bg-white p-7 rounded">
-      <div className="w-40">
-        <div className="w-32 h-32 flex justify-center items-center">
-          <img
-            src={data.productImage[0]}
-            width={120}
-            height={120}
-            className="mx-auto object-fill h-full"
-          />
-        </div>
-        <h1 className="text-ellipsis line-clamp-2">{data.productName}</h1>
 
-        <div>
-          <p className="font-semibold">
-            {displayINRCurrency(data.sellingPrice)}
-          </p>
-          <div
-            className="w-fit ml-auto p-2 rounded-full bg-green-200 cursor-pointer hover:bg-green-600 hover:text-white"
-            onClick={() => setEditProduct(true)}
-          >
-            <MdModeEditOutline />
-          </div>
+  return (
+    <div className="bg-white p-4 rounded-lg shadow w-[220px] h-[260px] flex flex-col justify-between">
+      {/* Image */}
+      <div className="w-full h-[120px] flex justify-center items-center">
+        <img
+          src={data.productImage[0]}
+          alt={data.productName}
+          className="max-h-full object-contain"
+        />
+      </div>
+
+      {/* Product Name */}
+      <h1 className="text-sm font-medium line-clamp-2 h-[40px]">
+        {data.productName}
+      </h1>
+
+      {/* Price + Edit */}
+      <div className="flex items-center justify-between">
+        <p className="font-semibold text-sm">
+          {displayINRCurrency(data.sellingPrice)}
+        </p>
+
+        <div
+          className="p-2 rounded-full bg-green-200 cursor-pointer hover:bg-green-600 hover:text-white"
+          onClick={() => setEditProduct(true)}
+        >
+          <MdModeEditOutline />
         </div>
       </div>
 

@@ -13,7 +13,10 @@ import { ImageSearchProvider } from "./context/ImageSearchContext";
 
 function App() {
   const dispatch = useDispatch();
+
   const [cartProductCount, setCartProductCount] = useState(0);
+  const [savedItemCount, setSavedItemCount] = useState(0);
+  const [savedItems, setSavedItems] = useState([]); // NEW: Store saved items data
 
   const fetchUserDetails = async () => {
     try {
@@ -29,7 +32,7 @@ function App() {
 
       if (dataApi.success) {
         dispatch(setUserDetails(dataApi.data));
-        return dataApi.data; //
+        return dataApi.data;
       } else {
         dispatch(setUserDetails(null));
         return null;
@@ -60,10 +63,38 @@ function App() {
     }
   };
 
+  // NEW FUNCTION
+  const fetchSavedItemCount = async (userId) => {
+    try {
+      let apiUrl = SummaryApi.gsaveItem.url.trim();
+      apiUrl = apiUrl.replace(/\u200B/g, "");
+
+      const res = await fetch(`${apiUrl}/${userId}`, {
+        method: SummaryApi.gsaveItem.method,
+        credentials: "include",
+      });
+
+      const data = await res.json();
+
+      if (Array.isArray(data)) {
+        setSavedItemCount(data.length);
+        setSavedItems(data); // Store the actual items data
+        return data;
+      }
+    } catch (error) {
+      console.error("Fetch saved items error:", error);
+    }
+    return [];
+  };
+
   useEffect(() => {
     const initializeApp = async () => {
-      await fetchUserDetails();
+      const user = await fetchUserDetails();
       await fetchUserAddToCart();
+
+      if (user?._id) {
+        await fetchSavedItemCount(user._id);
+      }
     };
 
     initializeApp();
@@ -77,6 +108,10 @@ function App() {
             fetchUserDetails,
             cartProductCount,
             fetchUserAddToCart,
+            savedItemCount,
+            fetchSavedItemCount,
+            savedItems, // NEW: Provide saved items data
+            setSavedItems, // NEW: Provide setter for saved items
           }}
         >
           <div className="flex flex-col min-h-screen">
@@ -85,7 +120,6 @@ function App() {
             <main className="flex-grow pt-16">
               <Outlet />
             </main>
-            <Footer />
           </div>
         </Context.Provider>
       </ImageSearchProvider>

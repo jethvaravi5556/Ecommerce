@@ -48,6 +48,7 @@ import getProductReviewController from "../controller/review/getProductReviewCon
 import getRatingAverageController from "../controller/review/getRatingAverageController.js";
 import updateReviewController from "../controller/review/updateReviewController.js";
 import deleteReviewController from "../controller/review/deleteReviewController.js";
+import chatbotController from "../controller/chatbot/chatbotController.js";
 
 const router = express.Router();
 
@@ -86,7 +87,6 @@ router.get("/search", searchProductController);
 router.post("/filterproduct", filterProductController);
 router.post("/recently-products", getRecentlyProductController);
 
-
 // User Add to Cart
 router.post("/addtocart", authToken, addToCartController);
 router.get(
@@ -111,13 +111,15 @@ router.post("/payment", authToken, paymentController);
 // router.post("/webhook", bodyParser.raw({ type: "application/json" }), webhookController);
 router.get("/order", authToken, getOrders);
 
-
 // review
 router.post("/add-review", authToken, addReviewController);
 router.get("/product-review/:productId", getProductReviewController);
 router.get("/rating-average/:productId", getRatingAverageController);
 router.patch("/update-review/:reviewId", authToken, updateReviewController);
 router.delete("/delete-review/:reviewId", authToken, deleteReviewController);
+
+// chatbot
+router.post("/chat", authToken, chatbotController);
 // otp
 router.post("/send-otp", sendOtpController);
 router.post("/verify-otp", verifyOtpController);

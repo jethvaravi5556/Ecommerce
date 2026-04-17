@@ -15,7 +15,7 @@ const AdminPanel = () => {
     if (user?.role !== ROLE.ADMIN) {
       navigate("/");
     }
-  }, [user]);
+  }, [user, navigate]);
 
   return (
     <div className="flex min-h-screen bg-gray-100">
@@ -51,12 +51,10 @@ const AdminPanel = () => {
                   : "hover:bg-gray-100"
               }`
             }
-            onClick={() => {
-              setMenuOpen(false);
-            }}
+            onClick={() => setMenuOpen(false)}
           >
             All Users
-          </Link>
+          </NavLink>
           {/*  */}
         </nav>
       </aside>

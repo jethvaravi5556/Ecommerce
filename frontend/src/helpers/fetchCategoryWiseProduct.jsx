@@ -15,7 +15,7 @@ const fetchCategoryWiseProduct = async (category) => {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ category }),
+      body: JSON.stringify({ category, page: 1, limit: 12 }),
     });
 
     if (!response.ok) {
@@ -33,5 +33,4 @@ const fetchCategoryWiseProduct = async (category) => {
   }
 };
 
-
-export default fetchCategoryWiseProduct
+export default fetchCategoryWiseProduct;

@@ -1,11 +1,11 @@
-const displayINRCurrency = (num) =>{
-    const formatter = new Intl.NumberFormat('en-IN',{
-        style: "currency",
-        currency: "INR",
-        minimumFractionDigits: 2
-    })
+const displayINRCurrency = (num) => {
+  if (!num || num > 10000000) return "₹0";
 
-    return formatter.format(num)
-}
+  return new Intl.NumberFormat("en-IN", {
+    style: "currency",
+    currency: "INR",
+    maximumFractionDigits: 2,
+  }).format(num);
+};
 
-export default displayINRCurrency
+export default displayINRCurrency;

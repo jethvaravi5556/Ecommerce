@@ -5,9 +5,13 @@ import Context from "../context";
 import displayINRCurrency from "../helpers/displayCurrency";
 import { MdDelete } from "react-icons/md";
 import { current } from "@reduxjs/toolkit";
+import CategoryWiseProductDisplay from "../components/CategoryWiseProductDisplay";
+import RecentlyViewed from "../components/RecentlyViewed";
 // import Stripe from "stripe";
 
 const Cart = () => {
+  const [paymentLoading, setPaymentLoading] = useState(false);
+  const [recentProducts, setRecentProducts] = useState([]);
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
   const context = useContext(Context);
@@ -32,16 +36,64 @@ const Cart = () => {
       setData(responseData.data);
     }
   };
-
+  const fetchRecentProducts = () => {
+    const recent = JSON.parse(localStorage.getItem("recentProducts")) || [];
+    setRecentProducts(recent);
+  };
   useEffect(() => {
     fetchData();
+    fetchRecentProducts();
+
+    const handleCartUpdate = () => {
+      fetchData();
+    };
+
+    window.addEventListener("cartUpdated", handleCartUpdate);
+    return () => {
+      window.removeEventListener("cartUpdated", handleCartUpdate);
+    };
   }, []);
 
-  const increaseQty = async (id, qty) => {
-    // setLoading(true);
+  const changeQty = async (id, qty) => {
+    if (qty < 1) return;
+
+    if (qty > 10) {
+      toast.error("Maximum quantity is 10");
+      return;
+    }
+
     const apiUrl = SummaryApi.updateAddToCartProduct.url
       .trim()
       .replace(/\u200B/g, "");
+
+    const response = await fetch(apiUrl, {
+      method: SummaryApi.updateAddToCartProduct.method,
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        _id: id,
+        quantity: qty,
+      }),
+    });
+
+    const responseData = await response.json();
+
+    if (responseData.success) {
+      fetchData();
+    }
+  };
+  const increaseQty = async (id, qty) => {
+    if (qty >= 10) {
+      toast.error("Maximum quantity is 10");
+      return;
+    }
+
+    const apiUrl = SummaryApi.updateAddToCartProduct.url
+      .trim()
+      .replace(/\u200B/g, "");
+
     const response = await fetch(apiUrl, {
       method: SummaryApi.updateAddToCartProduct.method,
       credentials: "include",
@@ -54,7 +106,6 @@ const Cart = () => {
       }),
     });
 
-    // setLoading(false);
     const responseData = await response.json();
 
     if (responseData.success) {
@@ -63,7 +114,7 @@ const Cart = () => {
   };
 
   const decreaseQty = async (id, qty) => {
-    if (qty <= 1) return; // prevent going below 1
+    if (qty <= 1) return;
     // setLoading(true);
     const apiUrl = SummaryApi.updateAddToCartProduct.url
       .trim()
@@ -125,25 +176,35 @@ const Cart = () => {
   );
 
   const handlePayment = async () => {
-    const apiUrl = SummaryApi.payment.url.trim().replace(/\u200B/g, "");
-    const response = await fetch(apiUrl, {
-      method: SummaryApi.payment.method,
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        cartItems: data,
-      }),
-    });
+    try {
+      setPaymentLoading(true);
 
-    // setLoading(false);
-    const responseData = await response.json();
-    console.log("paynebt f", responseData);
-    if (responseData?.url) {
-      window.location.href = responseData.url;
-    } else {
-      toast.error("Failed to create Stripe session");
+      const apiUrl = SummaryApi.payment.url.trim().replace(/\u200B/g, "");
+
+      const response = await fetch(apiUrl, {
+        method: SummaryApi.payment.method,
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          cartItems: data,
+        }),
+      });
+
+      const responseData = await response.json();
+
+      if (responseData?.url) {
+        setTimeout(() => {
+          window.location.href = responseData.url;
+        }, 1000);
+      } else {
+        setPaymentLoading(false);
+        toast.error("Failed to create Stripe session");
+      }
+    } catch (err) {
+      setPaymentLoading(false);
+      toast.error("Payment failed");
     }
   };
 
@@ -212,7 +273,15 @@ const Cart = () => {
                       >
                         -
                       </button>
-                      <span>{product?.quantity}</span>
+                      <input
+                        type="number"
+                        min="1"
+                        value={product?.quantity}
+                        onChange={(e) =>
+                          changeQty(product?._id, Number(e.target.value))
+                        }
+                        className="w-8 border text-center rounded"
+                      />
                       <button
                         className="w-6 h-6 border border-red-600 text-red-600 hover:bg-red-600 hover:text-white flex justify-center items-center rounded"
                         onClick={() =>
@@ -251,16 +320,37 @@ const Cart = () => {
                 </div>
 
                 <button
-                  className="bg-blue-600 text-white p-4 w-full mt-2"
+                  disabled={paymentLoading}
                   onClick={handlePayment}
+                  className={`p-4 w-full mt-2 font-semibold flex items-center justify-center gap-2 transition
+  ${
+    paymentLoading
+      ? "bg-gray-400 text-white cursor-not-allowed"
+      : "bg-blue-600 text-white hover:bg-blue-700"
+  }`}
                 >
-                  Payment
+                  {paymentLoading ? (
+                    <>
+                      <span className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+                      Redirecting...
+                    </>
+                  ) : (
+                    "Payment"
+                  )}
                 </button>
               </div>
             )}
           </div>
         )}
       </div>
+      <RecentlyViewed />
+      {paymentLoading && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className="bg-white px-10 py-6 rounded-2xl shadow-xl text-xl font-semibold animate-pulse">
+            Redirecting to payment...
+          </div>
+        </div>
+      )}
     </div>
   );
 };

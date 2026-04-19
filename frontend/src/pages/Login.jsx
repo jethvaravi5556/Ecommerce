@@ -2,7 +2,7 @@ import React, { useContext, useState } from "react";
 import loginIcons from "../assest/signin.gif";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
-import { toast } from "react-toastify"; 
+import { toast } from "react-toastify";
 import SummaryApi from "../common";
 import Context from "../context";
 import { GoogleLogin } from "@react-oauth/google";
@@ -12,7 +12,7 @@ import { setUserDetails } from "../store/userSlice";
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
-  const dispatch = useDispatch(); 
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   // const generalContext= useContext(Context)
   const { fetchUserDetails, fetchUserAddToCart } = useContext(Context);
@@ -41,10 +41,10 @@ const Login = () => {
 
     try {
       let apiUrl = SummaryApi.signIn.url.trim();
-      apiUrl = apiUrl.replace(/\u200B/g, ""); 
+      apiUrl = apiUrl.replace(/\u200B/g, "");
 
       const response = await fetch(apiUrl, {
-        method: SummaryApi.signIn.method, 
+        method: SummaryApi.signIn.method,
         headers: {
           "Content-Type": "application/json",
         },

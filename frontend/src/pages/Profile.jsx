@@ -8,15 +8,19 @@ const Profile = () => {
     email: "",
   });
 
-  const fetchProfile = async () => {
-    const response = await fetch(
-      SummaryApi.userProfile.url,
+  const validateName = (name) => {
+    return /^[A-Za-z\s]{3,}$/.test(name.trim());
+  };
 
-      {
-        method: SummaryApi.userProfile.method,
-        credentials: "include",
-      },
-    );
+  const validateEmail = (email) => {
+    return /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.com$/.test(email);
+  };
+
+  const fetchProfile = async () => {
+    const response = await fetch(SummaryApi.userProfile.url, {
+      method: SummaryApi.userProfile.method,
+      credentials: "include",
+    });
 
     const data = await response.json();
 
@@ -34,6 +38,15 @@ const Profile = () => {
   const handleChange = (e) => {
     const { name, value } = e.target;
 
+    if (name === "name") {
+      const onlyText = value.replace(/[^A-Za-z\s]/g, "");
+      setUser((prev) => ({
+        ...prev,
+        name: onlyText,
+      }));
+      return;
+    }
+
     setUser((prev) => ({
       ...prev,
       [name]: value,
@@ -43,30 +56,32 @@ const Profile = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const response = await fetch(
-      SummaryApi.updateProfile.url,
+    if (!validateName(user.name)) {
+      toast.error("Name must contain only alphabets and minimum 3 characters");
+      return;
+    }
 
-      {
-        method: SummaryApi.updateProfile.method,
+    if (!validateEmail(user.email)) {
+      toast.error("Invalid email format");
+      return;
+    }
 
-        credentials: "include",
-
-        headers: {
-          "Content-Type": "application/json",
-        },
-
-        body: JSON.stringify({
-          name: user.name,
-          email: user.email,
-        }),
+    const response = await fetch(SummaryApi.updateProfile.url, {
+      method: SummaryApi.updateProfile.method,
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
       },
-    );
+      body: JSON.stringify({
+        name: user.name.trim().replace(/\s+/g, " "),
+        email: user.email,
+      }),
+    });
 
     const data = await response.json();
 
     if (data.success) {
       toast.success("Profile Updated");
-
       fetchProfile();
     } else {
       toast.error(data.message);
@@ -80,25 +95,25 @@ const Profile = () => {
       <form onSubmit={handleSubmit}>
         <div>
           <label>Name</label>
-
           <input
             type="text"
             name="name"
             value={user.name}
             onChange={handleChange}
             className="border w-full p-2 rounded mb-3"
+            required
           />
         </div>
 
         <div>
           <label>Email</label>
-
           <input
             type="email"
             name="email"
             value={user.email}
             onChange={handleChange}
             className="border w-full p-2 rounded mb-3"
+            required
           />
         </div>
 

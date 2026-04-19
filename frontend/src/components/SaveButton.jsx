@@ -16,7 +16,7 @@ const SaveButton = ({ productId, className = "" }) => {
 
   const handleToggleSave = async (e) => {
     e.preventDefault();
-
+    e.stopPropagation();
     if (!user?._id) {
       alert("Login to save item");
       navigate("/login");
@@ -31,6 +31,7 @@ const SaveButton = ({ productId, className = "" }) => {
           (item) => item._id !== productId,
         );
         context.setSavedItems(updatedItems);
+        await context.fetchSavedItemCount(user._id);
       } else {
         await saveItem(productId, user._id);
         await context.fetchSavedItemCount(user._id);
@@ -42,6 +43,7 @@ const SaveButton = ({ productId, className = "" }) => {
 
   return (
     <button
+      type="button"
       onClick={handleToggleSave}
       className={`absolute top-2 right-2 text-xl ${className}`}
     >

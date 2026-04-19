@@ -8,6 +8,8 @@ import { toast } from "react-toastify";
 import SummaryApi from "../common";
 
 const UploadProduct = ({ onClose, fetchData }) => {
+  const MAX_PRICE = 10000000; // 1 crore limit (you can change)
+  const MIN_PRICE = 1;
   const [data, setData] = useState({
     productName: "",
     brandName: "",
@@ -49,11 +51,18 @@ const UploadProduct = ({ onClose, fetchData }) => {
 
     try {
       const uploadImageCloudinary = await uploadImage(file);
+      const imageUrl =
+        uploadImageCloudinary.secure_url || uploadImageCloudinary.url;
+
+      if (!imageUrl) {
+        throw new Error("Image upload returned invalid URL");
+      }
+
       setData((prev) => ({
         ...prev,
-        productImage: [...prev.productImage, uploadImageCloudinary.url],
+        productImage: [...prev.productImage, imageUrl],
       }));
-      console.log("Uploaded Image URL:", uploadImageCloudinary.url);
+      console.log("Uploaded Image URL:", imageUrl);
     } catch (error) {
       toast.error("Image upload failed.");
       console.error("Image Upload Error:", error);
@@ -73,18 +82,32 @@ const UploadProduct = ({ onClose, fetchData }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (
-      !data.productName ||
-      !data.brandName ||
-      !data.category ||
-      !data.productImage.length
-    ) {
+    if (!data.productName.trim()) {
+      toast.error("Product name is required");
+      return;
+    }
+
+    if (data.productName.length < 3) {
+      toast.error("Product name must be at least 3 characters");
+      return;
+    }
+
+    if (data.price < MIN_PRICE || data.price > MAX_PRICE) {
+      toast.error(`Price must be between ₹${MIN_PRICE} and ₹${MAX_PRICE}`);
+      return;
+    }
+
+    if (data.sellingPrice < MIN_PRICE || data.sellingPrice > MAX_PRICE) {
       toast.error(
-        "All fields are required, including at least one product image.",
+        `Selling price must be between ₹${MIN_PRICE} and ₹${MAX_PRICE}`,
       );
       return;
     }
 
+    if (data.sellingPrice > data.price) {
+      toast.error("Selling price cannot be greater than price");
+      return;
+    }
     try {
       const apiUrl = SummaryApi.uploadProduct.url.trim().replace(/\u200B/g, "");
 
@@ -220,13 +243,13 @@ const UploadProduct = ({ onClose, fetchData }) => {
           </label>
           <input
             type="number"
-            id="price"
-            placeholder="Enter the Price"
             name="price"
+            min={1}
+            max={10000000}
+            step="1"
             value={data.price}
             onChange={handleOnChange}
             className="bg-slate-100 border rounded p-2"
-            required
           />
 
           <label htmlFor="sellingPrice" className="mt-4">
@@ -234,15 +257,14 @@ const UploadProduct = ({ onClose, fetchData }) => {
           </label>
           <input
             type="number"
-            id="sellingPrice"
-            placeholder="Enter the Selling Price"
             name="sellingPrice"
+            min={1}
+            max={10000000}
+            step="1"
             value={data.sellingPrice}
             onChange={handleOnChange}
             className="bg-slate-100 border rounded p-2"
-            required
           />
-
           <label htmlFor="description" className="mt-4">
             Description:
           </label>

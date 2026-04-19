@@ -5,28 +5,54 @@ import UploadProduct from "../components/UploadProduct";
 import AdminProductCard from "../components/AdminProductCard";
 
 const AllProducts = () => {
+  const [page, setPage] = useState(1);
+  const [totalPage, setTotalPage] = useState(1);
   const [allProducts, setAllProducts] = useState([]);
   const [filterCategory, setFilterCategory] = useState("");
   const [openUploadProduct, setOpenUploadProduct] = useState(false);
 
   const fetchAllProducts = async () => {
-    const fetchData = await fetch(SummaryApi.allProduct.url, {
-      method: SummaryApi.allProduct.method,
-      credentials: "include",
-    });
+    const response = await fetch(
+      `${SummaryApi.allProduct.url}?page=${page}&limit=20`,
+      {
+        method: SummaryApi.allProduct.method,
+        credentials: "include",
+      },
+    );
 
-    const dataResponse = await fetchData.json();
+    const dataResponse = await response.json();
 
     if (dataResponse.success) {
       setAllProducts(dataResponse?.data || []);
+      setTotalPage(dataResponse.totalPage);
     } else {
       toast.error(dataResponse.message);
     }
   };
+  const handleDeleteProduct = async (id) => {
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this product?",
+    );
 
+    if (!confirmDelete) return;
+
+    const response = await fetch(`${SummaryApi.deleteProduct.url}/${id}`, {
+      method: SummaryApi.deleteProduct.method,
+      credentials: "include",
+    });
+
+    const data = await response.json();
+
+    if (data.success) {
+      toast.success(data.message);
+      fetchAllProducts(); // refresh list
+    } else {
+      toast.error(data.message);
+    }
+  };
   useEffect(() => {
     fetchAllProducts();
-  }, []);
+  }, [page]);
 
   const categoryList = [
     ...new Set(allProducts.map((product) => product.category)),
@@ -71,6 +97,7 @@ const AllProducts = () => {
             data={product}
             key={index}
             fetchData={fetchAllProducts}
+            onDelete={handleDeleteProduct}
           />
         ))}
       </div>
@@ -84,6 +111,37 @@ const AllProducts = () => {
 
       {!filteredProducts.length && (
         <p className="text-center mt-4">No Products Found</p>
+      )}
+      {totalPage > 1 && (
+        <div className="flex justify-center mt-8 gap-2 flex-wrap">
+          <button
+            disabled={page === 1}
+            onClick={() => setPage(page - 1)}
+            className="px-3 py-1 border rounded"
+          >
+            Prev
+          </button>
+
+          {[...Array(totalPage)].map((_, i) => (
+            <button
+              key={i}
+              onClick={() => setPage(i + 1)}
+              className={`px-3 py-1 border rounded ${
+                page === i + 1 ? "bg-red-600 text-white" : ""
+              }`}
+            >
+              {i + 1}
+            </button>
+          ))}
+
+          <button
+            disabled={page === totalPage}
+            onClick={() => setPage(page + 1)}
+            className="px-3 py-1 border rounded"
+          >
+            Next
+          </button>
+        </div>
       )}
     </div>
   );

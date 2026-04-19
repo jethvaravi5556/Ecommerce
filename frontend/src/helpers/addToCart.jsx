@@ -5,7 +5,6 @@ const addToCart = async (e, id) => {
   e?.stopPropagation();
   e?.preventDefault();
 
-  // Ensure the URL is correctly formatted
   let apiUrl = SummaryApi.addToCartProduct.url.trim();
   apiUrl = apiUrl.replace(/\u200B/g, "");
 
@@ -21,7 +20,6 @@ const addToCart = async (e, id) => {
       }),
     });
 
-    // If user not logged in
     if (response.status === 401) {
       alert("Please login first");
       window.location.href = "/login";
@@ -32,6 +30,8 @@ const addToCart = async (e, id) => {
 
     if (responseData.success) {
       toast.success(responseData.message);
+
+      window.dispatchEvent(new Event("cartUpdated"));
     }
 
     if (responseData.error) {

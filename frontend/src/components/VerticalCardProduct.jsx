@@ -41,28 +41,31 @@ const VerticalCardProduct = ({ category, heading }) => {
   return (
     <div className="container mx-auto px-4 my-4 relative">
       <h2 className="text-2xl font-semibold py-2">{heading}</h2>
+
+      <button
+        className="absolute left-0 top-1/2 -translate-y-1/2 z-20 bg-white shadow-md rounded-full p-2 hidden md:block"
+        onClick={scrollLeft}
+      >
+        <FaAngleLeft />
+      </button>
+
+      <button
+        className="absolute right-0 top-1/2 -translate-y-1/2 z-20 bg-white shadow-md rounded-full p-2 hidden md:block"
+        onClick={scrollRight}
+      >
+        <FaAngleRight />
+      </button>
+
       <div
         className="flex items-center gap-4 md:gap-6 overflow-x-scroll scrollbar-none transition-all"
         ref={scrollElement}
       >
-        <button
-          className="bg-white shadow-md rounded-full p-1 absolute left-0 text-lg hidden md:block"
-          onClick={scrollLeft}
-        >
-          <FaAngleLeft />
-        </button>
-        <button
-          className="bg-white shadow-md rounded-full p-1 absolute right-0 text-lg hidden md:block"
-          onClick={scrollRight}
-        >
-          <FaAngleRight />
-        </button>
         {loading
           ? loadingList.map((product, index) => {
               return (
                 <div
                   key={index}
-                  className="w-full min-w-[280px] md:min-w-[320px] max-w-[280px] md:max-w-[320px] bg-white rounded-sm shadow-md "
+                  className="w-full min-w-[280px] md:min-w-[320px] max-w-[280px] md:max-w-[320px] bg-white rounded-lg shadow-md "
                 >
                   <div className="bg-slate-200 h-48 p-4 min-w-[280px] md:min-w-[150px] flex justify-center items-center">
                     {/* <img src={product?.productImage[0]} className='h-full object-scale-down hover:scale-110 transition-all mix-blend-multiply'/> */}
@@ -85,9 +88,9 @@ const VerticalCardProduct = ({ category, heading }) => {
                 <Link
                   to={"product/" + product?._id}
                   key={product._id || index}
-                  className="w-full min-w-[280px] md:min-w-[320px] max-w-[280px] md:max-w-[320px] bg-white rounded-sm shadow-md "
+                  className="w-full min-w-[280px] md:min-w-[320px] max-w-[280px] md:max-w-[320px] bg-white rounded-md shadow-md "
                 >
-                  <div className="relative bg-slate-200 h-48 flex justify-center items-center">
+                  <div className="relative bg-slate-200 h-48 flex justify-center rounded-t-md items-center">
                     <SaveButton
                       className="absolute top-2 right-2 z-10"
                       productId={product?._id}
@@ -106,16 +109,16 @@ const VerticalCardProduct = ({ category, heading }) => {
                     <p className="capitalize text-slate-500">
                       {product?.category}
                     </p>
-                    <div className="flex gap-2">
-                      <p className="text-red-500 font-medium">
+                    <div className="flex gap-2 min-w-0 overflow-hidden">
+                      <p className="text-red-500 font-medium ">
                         {displayINRCurrency(product?.sellingPrice)}
                       </p>
-                      <p className="text-slate-500 line-through">
+                      <p className="text-slate-500 line-through truncate">
                         {displayINRCurrency(product?.price)}
                       </p>
                     </div>
                     <button
-                      className="text-sm bg-red-500 hover:bg-red-700 text-white px-3 py-0.5 rounded-full"
+                      className="text-sm bg-red-500 hover:bg-red-700 text-white px-3 py-1 rounded-full"
                       onClick={(e) => handleAddToCart(e, product?._id)}
                     >
                       Add to Cart

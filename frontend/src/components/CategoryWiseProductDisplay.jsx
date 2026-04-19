@@ -1,110 +1,166 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import fetchCategoryWiseProduct from "../helpers/fetchCategoryWiseProduct";
 import displayINRCurrency from "../helpers/displayCurrency";
-import { FaAngleLeft, FaAngleRight } from "react-icons/fa";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import Context from "../context";
 import scrollTop from "../helpers/scrollTop";
 import SaveButton from "./SaveButton";
+import addToCart from "../helpers/addToCart";
 
-const CategoryWiseProductDisplay = ({ category, heading }) => {
+const CategoryWiseProductDisplay = ({
+  category,
+  heading,
+  excludeProductId,
+}) => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
-  const loadingList = new Array(13).fill(null);
-  const navigate = useNavigate();
+  const [page, setPage] = useState(1);
+  const [totalPage, setTotalPage] = useState(1);
+
+  const loadingList = new Array(8).fill(null);
+
   const { fetchUserAddToCart } = useContext(Context);
 
   const handleAddToCart = async (e, id) => {
+    e.preventDefault();
+    e.stopPropagation();
+
     await addToCart(e, id);
     fetchUserAddToCart();
   };
 
   const fetchData = async () => {
     if (!category) {
-      console.warn("❌ category is missing in CategoryWiseProductDisplay");
+      console.warn("category is missing in CategoryWiseProductDisplay");
       return;
     }
+
     setLoading(true);
+
     const categoryProduct = await fetchCategoryWiseProduct(category);
+
     setLoading(false);
-    setData(categoryProduct?.data || []);
+
+    const filteredProduct = categoryProduct?.data?.filter(
+      (p) => p._id !== excludeProductId,
+    );
+
+    setData(filteredProduct || []);
+    setTotalPage(categoryProduct?.totalPage || 1);
   };
+
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [category, page]);
 
   return (
-    <div className="container mx-auto px-4 my-4 relative">
-      <h2 className="text-2xl font-semibold py-2">{heading}</h2>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 md:gap-6 overflow-x-scroll scrollbar-none transition-all">
+    <div className="container mx-auto px-3 sm:px-4 lg:px-6 my-6">
+      <h2 className="text-xl sm:text-2xl font-semibold mb-4">{heading}</h2>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-5">
         {loading
-          ? loadingList.map((product, index) => {
-              return (
-                <div
-                  key={index}
-                  className="w-full min-w-[280px] md:min-w-[320px] max-w-[280px] md:max-w-[320px] bg-white rounded-sm shadow-md "
-                >
-                  <div className="bg-slate-200 h-48 p-4 min-w-[280px] md:min-w-[150px] flex justify-center items-center">
-                    {/* <img src={product?.productImage[0]} className='h-full object-scale-down hover:scale-110 transition-all mix-blend-multiply'/> */}
+          ? loadingList.map((_, index) => (
+              <div
+                key={index}
+                className="bg-white rounded-xl shadow-sm overflow-hidden border"
+              >
+                <div className="bg-slate-200 h-36 sm:h-44 md:h-52 animate-pulse" />
+
+                <div className="p-3 space-y-2">
+                  <div className="h-4 bg-slate-200 rounded animate-pulse" />
+                  <div className="h-3 w-2/3 bg-slate-200 rounded animate-pulse" />
+                  <div className="flex gap-2">
+                    <div className="h-4 w-16 bg-slate-200 rounded animate-pulse" />
+                    <div className="h-4 w-14 bg-slate-200 rounded animate-pulse" />
                   </div>
-                  <div className="p-4 grid w-full gap-2">
-                    <h2 className="font-medium text-base md:text-lg text-ellipsis line-clamp-1 text-black bg-slate-200 animate-pulse p-1 rounded-full"></h2>
-                    <p className="capitalize text-slate-500 bg-slate-200 animate-pulse p-1 rounded-full"></p>
-                    <div className="flex gap-2">
-                      <p className="text-red-500 font-medium bg-slate-200 animate-pulse p-1 rounded-full"></p>
-                      <p className="text-slate-500 line-through bg-slate-200 animate-pulse p-1 rounded-full"></p>
-                    </div>
-                    <button className="text-sm text-white px-3 py-0.5 rounded-full bg-slate-200 animate-pulse p-1"></button>
-                  </div>
+                  <div className="h-9 bg-slate-200 rounded-full animate-pulse" />
                 </div>
-              );
-            })
-          : data.map((product, index) => {
-              return (
-                <Link
-                  to={"/product/" + product?._id}
-                  className="w-full min-w-[280px] md:min-w-[320px] max-w-[280px] md:max-w-[320px] bg-white rounded-sm shadow-md "
-                  onClick={scrollTop}
-                >
-                  <div className="relative bg-slate-200 h-48 p-4 min-w-[280px] md:min-w-[150px] flex justify-center items-center">
-                    <SaveButton
-                      className="absolute top-2 right-2 z-10"
-                      productId={product?._id}
-                    />
-                    <img
-                      src={product?.productImage[0]}
-                      className="h-full object-scale-down hover:scale-110 transition-all mix-blend-multiply"
-                    />
+              </div>
+            ))
+          : data.map((product) => (
+              <Link
+                key={product?._id}
+                to={"/product/" + product?._id}
+                onClick={scrollTop}
+                className="bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden border group"
+              >
+                <div className="relative bg-slate-100 h-36 sm:h-44 md:h-52 flex justify-center items-center overflow-hidden">
+                  <div className="absolute top-2 right-2 z-10">
+                    <SaveButton productId={product?._id} />
                   </div>
 
-                  <div className="p-4 grid gap-3">
-                    <h2 className="font-medium text-base md:text-lg text-ellipsis line-clamp-1 text-black">
-                      {product?.productName}
-                    </h2>
-                    <p className="capitalize text-slate-500">
-                      {product?.category}
+                  {product?.productImage?.[0] && (
+                    <img
+                      src={product.productImage[0]}
+                      alt={product?.productName}
+                      className="h-full w-full object-contain p-3 group-hover:scale-105 transition-all duration-300"
+                    />
+                  )}
+                </div>
+
+                <div className="p-3 sm:p-4 flex flex-col gap-2">
+                  <h2 className="font-medium text-sm sm:text-base md:text-lg text-black line-clamp-1">
+                    {product?.productName}
+                  </h2>
+
+                  <p className="capitalize text-slate-500 text-xs sm:text-sm line-clamp-1">
+                    {product?.category}
+                  </p>
+
+                  <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
+                    <p className="text-red-500 font-semibold text-sm sm:text-base">
+                      {displayINRCurrency(product?.sellingPrice)}
                     </p>
-                    <div className="flex gap-2">
-                      <p className="text-red-500 font-medium">
-                        {displayINRCurrency(product?.sellingPrice)}
-                      </p>
-                      <p className="text-slate-500 line-through">
-                        {displayINRCurrency(product?.price)}
-                      </p>
-                    </div>
-                    <button
-                      className="text-sm bg-red-500 hover:bg-red-700 text-white px-3 py-0.5 rounded-full"
-                      onClick={(e) => {
-                        handleAddToCart(e, product?._id);
-                      }}
-                    >
-                      Add to Cart
-                    </button>
+
+                    <p className="text-slate-400 line-through text-xs sm:text-sm">
+                      {displayINRCurrency(product?.price)}
+                    </p>
                   </div>
-                </Link>
-              );
-            })}
+
+                  <button
+                    onClick={(e) => handleAddToCart(e, product?._id)}
+                    className="mt-2 text-xs sm:text-sm bg-red-500 hover:bg-red-600 text-white py-2 rounded-full transition-all"
+                  >
+                    Add to Cart
+                  </button>
+                </div>
+              </Link>
+            ))}
       </div>
+
+      {totalPage > 1 && (
+        <div className="flex justify-center items-center gap-2 mt-8 flex-wrap">
+          <button
+            disabled={page === 1}
+            onClick={() => setPage(page - 1)}
+            className="px-3 sm:px-4 py-1.5 border rounded-md text-sm disabled:opacity-40"
+          >
+            Previous
+          </button>
+
+          {Array.from({ length: totalPage }, (_, i) => (
+            <button
+              key={i}
+              onClick={() => setPage(i + 1)}
+              className={`px-3 sm:px-4 py-1.5 border rounded-md text-sm transition-all ${
+                page === i + 1
+                  ? "bg-red-600 text-white border-red-600"
+                  : "bg-white"
+              }`}
+            >
+              {i + 1}
+            </button>
+          ))}
+
+          <button
+            disabled={page === totalPage}
+            onClick={() => setPage(page + 1)}
+            className="px-3 sm:px-4 py-1.5 border rounded-md text-sm disabled:opacity-40"
+          >
+            Next
+          </button>
+        </div>
+      )}
     </div>
   );
 };

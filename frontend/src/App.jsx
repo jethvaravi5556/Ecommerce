@@ -6,6 +6,7 @@ import Header from "./components/Header";
 import { ToastContainer } from "react-toastify";
 import SummaryApi from "./common";
 import Context from "./context";
+import Chatbot from "./components/Chatbot";
 import { setUserDetails } from "./store/userSlice";
 import { useDispatch } from "react-redux";
 import { GoogleOAuthProvider } from "@react-oauth/google";
@@ -99,7 +100,17 @@ function App() {
 
     initializeApp();
   }, []);
+  useEffect(() => {
+    const updateCart = () => {
+      fetchUserAddToCart();
+    };
 
+    window.addEventListener("cartUpdated", updateCart);
+
+    return () => {
+      window.removeEventListener("cartUpdated", updateCart);
+    };
+  }, []);
   return (
     <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
       <ImageSearchProvider>
@@ -110,8 +121,8 @@ function App() {
             fetchUserAddToCart,
             savedItemCount,
             fetchSavedItemCount,
-            savedItems, // NEW: Provide saved items data
-            setSavedItems, // NEW: Provide setter for saved items
+            savedItems,
+            setSavedItems,
           }}
         >
           <div className="flex flex-col min-h-screen">
@@ -120,6 +131,7 @@ function App() {
             <main className="flex-grow pt-16">
               <Outlet />
             </main>
+            <Chatbot />
           </div>
         </Context.Provider>
       </ImageSearchProvider>

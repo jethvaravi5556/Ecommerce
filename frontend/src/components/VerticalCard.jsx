@@ -39,10 +39,10 @@ const VerticalCard = ({ loading, data = [] }) => {
                 <Link
                   key={product._id}
                   to={"/product/" + product?._id}
-                  className="w-full bg-white rounded-sm shadow-md"
+                  className="w-full bg-white rounded-md shadow-md"
                   onClick={scrollTop}
                 >
-                  <div className="relative bg-slate-200 h-48 p-4 min-w-[280px] md:min-w-[150px] flex justify-center items-center">
+                  <div className="relative bg-slate-200 h-48 p-4 min-w-[280px] md:min-w-[150px] flex justify-center items-center rounded-t-md ">
                     <SaveButton
                       className="absolute top-2 right-2 z-10"
                       productId={product?._id}
@@ -59,16 +59,16 @@ const VerticalCard = ({ loading, data = [] }) => {
                     <p className="capitalize text-slate-500">
                       {product?.category}
                     </p>
-                    <div className="flex gap-2">
-                      <p className="text-red-500 font-medium">
+                    <div className="flex gap-2 min-w-0 overflow-hidden">
+                      <p className="text-red-500 font-medium ">
                         {displayINRCurrency(product?.sellingPrice)}
                       </p>
-                      <p className="text-slate-500 line-through">
+                      <p className="text-slate-500 line-through truncate">
                         {displayINRCurrency(product?.price)}
                       </p>
                     </div>
                     <button
-                      className="text-sm bg-red-500 hover:bg-red-700 text-white px-3 py-0.5 rounded-full"
+                      className="text-sm bg-red-500 hover:bg-red-700 text-white px-3 py-1 rounded-full"
                       onClick={(e) => handleAddToCart(e, product?._id)}
                     >
                       Add to Cart

@@ -2,69 +2,104 @@ import React, { useEffect, useState } from "react";
 import SummaryApi from "../common";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
+
 const CategoryList = () => {
   const [loading, setLoading] = useState(false);
   const [categoryProduct, setCategoryProduct] = useState([]);
-  const categoryLoading = new Array(13).fill(null);
+  const [isSticky, setIsSticky] = useState(false);
+
+  const categoryLoading = new Array(10).fill(null);
 
   const fetchCategoryProduct = async () => {
     setLoading(true);
 
     let apiUrl = SummaryApi.categoryProduct.url.trim();
-    apiUrl = apiUrl.replace(/\u200B/g, ""); // Remove hidden characters
+    apiUrl = apiUrl.replace(/\u200B/g, "");
 
-    const fetchData = await fetch(apiUrl, {
+    const res = await fetch(apiUrl, {
       method: SummaryApi.categoryProduct.method,
       credentials: "include",
     });
 
-    const dataResponse = await fetchData.json();
+    const dataResponse = await res.json();
 
     if (dataResponse.success) {
-      setLoading(false);
       setCategoryProduct(dataResponse.data);
     } else {
       toast.error(dataResponse.message);
     }
+
+    setLoading(false);
   };
 
   useEffect(() => {
     fetchCategoryProduct();
+
+    const handleScroll = () => {
+      setIsSticky(window.scrollY > 40);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
   return (
-    <div className="container mx-auto p-4 px-4">
-      <div className="flex items-center gap-4 justify-between overflow-x-auto scrollbar-none">
-        {loading
-          ? categoryLoading.map((e1, index) => {
-              return (
+    <div
+      className={`w-full sticky top-16  z-40 bg-white/80 backdrop-blur-md
+      transition-all duration-300
+      ${isSticky ? "shadow border-b py-2" : "py-4"}
+    `}
+    >
+      <div className="container mx-auto px-4">
+        <div
+          className={`flex items-center gap-6 justify-between overflow-x-auto scrollbar-none
+          scroll-smooth`}
+        >
+          {loading
+            ? categoryLoading.map((_, index) => (
                 <div
-                  className="h-16 w-16 md:w-20 md:h-20 rounded-full overflow-hidden p-4 bg-slate-200 animate-pulse"
-                  key={"categoryLoading" + index}
+                  key={index}
+                  className="h-10 w-24 bg-slate-200 animate-pulse rounded-full"
                 ></div>
-              );
-            })
-          : categoryProduct.map((product, index) => {
-              return (
+              ))
+            : categoryProduct.map((product) => (
                 <Link
-                  to={"/product-category?category=" + product?.category}
-                  className="cursor-pointer"
                   key={product?.category}
+                  to={"/product-category?category=" + product?.category}
+                  className={`min-w-fit flex flex-col items-center transition-all duration-300
+                  
+                  ${
+                    isSticky
+                      ? "px-4 py-1.5 bg-slate-100 rounded-full hover:bg-red-500 hover:text-white shadow-sm hover:shadow-md hover:-translate-y-[1px]"
+                      : ""
+                  }
+                  
+                  `}
                 >
-                  <div className="h-16 w-16 md:w-20 md:h-20 rounded-full overflow-hidden p-4 bg-slate-200 flex items-center justify-center">
+                  <div
+                    className={`rounded-full overflow-hidden bg-slate-200 flex items-center justify-center
+                    transition-all duration-300
+                    ${
+                      isSticky
+                        ? "h-0 w-0 opacity-0 mb-0 "
+                        : "h-16 w-16 md:h-20 md:w-20 p-3 mb-1  opacity-100"
+                    }
+                  `}
+                  >
                     <img
                       src={product?.productImage[0]}
                       alt={product?.category}
-                      className="h-full object-scale-down mix-blend-multiply hover:scale-125 transition-all"
+                      className="h-full object-scale-down mix-blend-multiply"
                     />
                   </div>
-                  <p className="text-center text-sm md:text-base capitalize">
+
+                  <p className="text-sm md:text-base capitalize whitespace-nowrap font-medium">
                     {product?.category}
                   </p>
                 </Link>
-              );
-            })}
+              ))}
+        </div>
       </div>
-      <div></div>
     </div>
   );
 };

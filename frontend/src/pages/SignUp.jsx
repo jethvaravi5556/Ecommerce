@@ -22,10 +22,13 @@ const SignUp = () => {
   const navigate = useNavigate();
 
   const validateEmail = (email) => {
-    const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.com$/;
+    const emailPattern = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.com$/;
     return emailPattern.test(email);
   };
-
+  const validateName = (name) => {
+    const namePattern = /^[A-Za-z\s]+$/;
+    return namePattern.test(name);
+  };
   const validatePassword = (password) => {
     const minLength = /.{8,}/;
     const upperCase = /[A-Z]/;
@@ -51,6 +54,15 @@ const SignUp = () => {
 
   const handleOnChange = (e) => {
     const { name, value } = e.target;
+
+    if (name === "name") {
+      const onlyText = value.replace(/[^A-Za-z\s]/g, "");
+      setData((prev) => ({
+        ...prev,
+        name: onlyText,
+      }));
+      return;
+    }
 
     setData((prev) => ({
       ...prev,
@@ -80,6 +92,10 @@ const SignUp = () => {
 
     if (!name || !email || !password || !confirmpassword) {
       toast.error("All fields are required");
+      return;
+    }
+    if (!validateName(name)) {
+      toast.error("Name should contain only alphabets");
       return;
     }
 
@@ -115,7 +131,8 @@ const SignUp = () => {
 
       if (dataApi.success) {
         toast.success(dataApi.message);
-        navigate("/login");
+        // localStorage.setItem("token", dataApi.token);
+        navigate("/");
 
         setData({
           name: "",
@@ -167,6 +184,7 @@ const SignUp = () => {
                   value={data.name}
                   onChange={handleOnChange}
                   placeholder="Enter Your Name"
+                  pattern="[A-Za-z\s]+"
                   className="w-full h-full outline-none bg-transparent"
                   required
                 />

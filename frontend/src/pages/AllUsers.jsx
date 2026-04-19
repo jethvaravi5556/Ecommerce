@@ -6,21 +6,27 @@ import ChangeUserRole from "../components/ChangeUserRole";
 import { toast } from "react-toastify";
 
 const AllUsers = () => {
+  const [page, setPage] = useState(1);
+  const [totalPage, setTotalPage] = useState(1);
   const [allUsers, setAllUsers] = useState([]);
   const [filterRole, setFilterRole] = useState("");
   const [openUpdateRole, setOpenUpdateRole] = useState(false);
   const [updateUserDetails, setUpdateUserDetails] = useState(null);
 
   const fetchAllUsers = async () => {
-    const fetchData = await fetch(SummaryApi.AllUsers.url, {
-      method: SummaryApi.AllUsers.method,
-      credentials: "include",
-    });
+    const response = await fetch(
+      `${SummaryApi.AllUsers.url}?page=${page}&limit=10`,
+      {
+        method: SummaryApi.AllUsers.method,
+        credentials: "include",
+      },
+    );
 
-    const dataResponse = await fetchData.json();
+    const dataResponse = await response.json();
 
     if (dataResponse.success) {
       setAllUsers(dataResponse.data);
+      setTotalPage(dataResponse.totalPage);
     } else {
       toast.error(dataResponse.message);
     }
@@ -28,11 +34,11 @@ const AllUsers = () => {
 
   useEffect(() => {
     fetchAllUsers();
-  }, []);
+  }, [page]);
 
   const handleDeleteUser = async (id) => {
     const confirmDelete = window.confirm(
-      "Are you sure you want to delete this user?"
+      "Are you sure you want to delete this user?",
     );
 
     if (!confirmDelete) return;
@@ -53,7 +59,7 @@ const AllUsers = () => {
   };
 
   const filteredUsers = allUsers.filter((user) =>
-    filterRole ? user.role === filterRole : true
+    filterRole ? user.role === filterRole : true,
   );
 
   return (
@@ -75,7 +81,7 @@ const AllUsers = () => {
 
       {/* Table */}
       <div className="bg-white p-4 mt-4 rounded w-full overflow-x-auto">
-        <table className="min-w-[700px] w-full text-sm whitespace-nowrap">
+        <table className="w-full text-sm whitespace-nowrap">
           <thead>
             <tr className="bg-black text-white">
               <th>Sr.</th>
@@ -94,9 +100,7 @@ const AllUsers = () => {
                 <td className="p-2">{user.name}</td>
                 <td className="p-2">{user.email}</td>
                 <td className="p-2">{user.role}</td>
-                <td className="p-2">
-                  {moment(user.createdAt).format("LL")}
-                </td>
+                <td className="p-2">{moment(user.createdAt).format("LL")}</td>
 
                 <td className="p-2">
                   <div className="flex justify-center gap-2">
@@ -134,6 +138,38 @@ const AllUsers = () => {
           onClose={() => setOpenUpdateRole(false)}
           callFunc={fetchAllUsers}
         />
+      )}
+
+      {totalPage > 1 && (
+        <div className="flex justify-center mt-6 gap-2 flex-wrap">
+          <button
+            disabled={page === 1}
+            onClick={() => setPage(page - 1)}
+            className="px-3 py-1 border rounded"
+          >
+            Prev
+          </button>
+
+          {[...Array(totalPage)].map((_, i) => (
+            <button
+              key={i}
+              onClick={() => setPage(i + 1)}
+              className={`px-3 py-1 border rounded ${
+                page === i + 1 ? "bg-black text-white" : ""
+              }`}
+            >
+              {i + 1}
+            </button>
+          ))}
+
+          <button
+            disabled={page === totalPage}
+            onClick={() => setPage(page + 1)}
+            className="px-3 py-1 border rounded"
+          >
+            Next
+          </button>
+        </div>
       )}
     </div>
   );

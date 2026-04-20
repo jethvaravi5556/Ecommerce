@@ -167,6 +167,10 @@ const SummaryApi = {
     url: `${backendDomain}/api/reset-password`,
     method: "post",
   },
+  googleLogin: {
+  url: `${backendDomain}/api/google-login`,
+  method: "post",
+  },
 };
 
 export default SummaryApi;

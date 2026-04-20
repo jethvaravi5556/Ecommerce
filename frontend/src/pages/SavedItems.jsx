@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import { MdDelete } from "react-icons/md";
 import { Link } from "react-router-dom";
 import displayINRCurrency from "../helpers/displayCurrency";
-import unsaveItem from "../helpers/unsaveItem";
+import unsaveItem from "../helpers/UnsaveItem";
 import addToCart from "../helpers/addToCart";
 import SummaryApi from "../common";
 import Context from "../context";

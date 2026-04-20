@@ -141,9 +141,9 @@ const Login = () => {
               onSuccess={async (credentialResponse) => {
                 try {
                   const res = await fetch(
-                    "http://localhost:8000/api/google-login",
+                    SummaryApi.googleLogin.url,,
                     {
-                      method: "POST",
+                      method: SummaryApi.googleLogin.method,
                       headers: {
                         "Content-Type": "application/json",
                       },

@@ -2,8 +2,8 @@ import React, { useContext } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { AiOutlineHeart, AiFillHeart } from "react-icons/ai";
-import saveItem from "../helpers/saveItem";
-import unsaveItem from "../helpers/unsaveItem";
+import saveItem from "../helpers/SaveItem";
+import unsaveItem from "../helpers/UnsaveItem";
 import Context from "../context";
 
 const SaveButton = ({ productId, className = "" }) => {

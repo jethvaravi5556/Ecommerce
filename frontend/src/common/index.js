@@ -1,6 +1,6 @@
 import AllUsers from "../pages/AllUsers";
 
-const backendDomain = process.env.REACT_APP_API_BASE_URL;
+const backendDomain = import.meta.env.VITE_API_URL;
 
 const SummaryApi = {
   signUp: {

@@ -1,6 +1,6 @@
 import AllUsers from "../pages/AllUsers";
 
-const backendDomain = "http://localhost:8000";
+const backendDomain = import.meta.env.REACT_APP_API_BASE_URL;
 
 const SummaryApi = {
   signUp: {

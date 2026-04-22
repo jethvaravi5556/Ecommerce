@@ -141,7 +141,7 @@ const Login = () => {
               onSuccess={async (credentialResponse) => {
                 try {
                   const res = await fetch(
-                    SummaryApi.googleLogin.url,,
+                    SummaryApi.googleLogin.url,
                     {
                       method: SummaryApi.googleLogin.method,
                       headers: {

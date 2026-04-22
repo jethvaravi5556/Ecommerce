@@ -100,7 +100,7 @@ const SummaryApi = {
     method: "post",
   },
   countAddToCartProduct: {
-    url: `${backendDomain}/api/countAddToCartProduct`,
+    url: `${backendDomain}/api/countaddtocartproduct`,
     method: "get",
   },
   addToCartViewProduct: {

@@ -27,7 +27,13 @@ app.use(
     methods: ["GET", "POST", "PATCH", "PUT", "DELETE", "OPTIONS"],
   }),
 );
-app.options("*", cors());
+app.options(
+  "*",
+  cors({
+    origin: process.env.FRONTEND_URL,
+    credentials: true,
+  }),
+);
 app.use(express.json());
 app.use(cookieParser());
 
